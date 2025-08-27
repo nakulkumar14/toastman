@@ -41,7 +41,10 @@ public class HttpRequestUI extends Application {
 
         paramEditor.bindToUrlField(inputBar.getUrlField());  // sync with URL field
 
-        primaryStage.setScene(new Scene(layout, 1000, 750));
+        Scene scene = new Scene(layout, 1000, 750);
+        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+
+        primaryStage.setScene(scene);
         primaryStage.setTitle("HTTP Request Sender");
         primaryStage.show();
     }

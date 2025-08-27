@@ -1,5 +1,6 @@
 package com.toast.demo.components;
 
+import com.toast.demo.util.JsonHighlighter;
 import com.toast.demo.util.StatusUtils;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -11,10 +12,12 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.fxmisc.richtext.StyleClassedTextArea;
 
 public class ResponseSection extends VBox {
 
-    private final TextArea responseArea = new TextArea();
+//    private final TextArea responseArea = new TextArea();
+    private final StyleClassedTextArea responseArea = new StyleClassedTextArea();
     private Label statusCodeLabel = new Label();
     private Button copyButton = new Button("Copy");
 
@@ -32,7 +35,7 @@ public class ResponseSection extends VBox {
         responseArea.setEditable(false);
         responseArea.setWrapText(true);
         responseArea.setPrefHeight(300);
-        responseArea.setPromptText("Response will appear here..."); // can be removed
+//        responseArea.setPromptText("Response will appear here..."); // can be removed
 
         statusCodeLabel.setStyle("-fx-font-weight: bold;");
 
@@ -43,11 +46,12 @@ public class ResponseSection extends VBox {
     }
 
     public void setResponseBody(String body) {
-        responseArea.setText(body);
+//        responseArea.setText(body);
+        JsonHighlighter.highlightJson(responseArea, body);
     }
 
     public void setError(String message) {
-        responseArea.setText("Error: " + message);
+//        responseArea.setText("Error: " + message);
         statusCodeLabel.setText("");
     }
 
@@ -82,9 +86,9 @@ public class ResponseSection extends VBox {
         });
     }
 
-    public TextArea getResponseArea() {
-        return responseArea;
-    }
+//    public TextArea getResponseArea() {
+//        return responseArea;
+//    }
 
     public Label getStatusCodeLabel() {
         return statusCodeLabel;
