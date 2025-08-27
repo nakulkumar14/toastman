@@ -1,5 +1,6 @@
 package com.toast.demo;
 
+import com.toast.demo.components.BodyEditor;
 import com.toast.demo.components.HeaderEditor;
 import com.toast.demo.components.ParamEditor;
 import com.toast.demo.components.ResponseSection;
@@ -13,7 +14,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -21,7 +21,7 @@ public class HttpRequestUI extends Application {
 
     private final HttpRequestService httpRequestService = new HttpRequestService();
 
-    private final TextArea bodyArea = createBodyArea();
+    private final BodyEditor bodyEditor = new BodyEditor();
 
     private HeaderEditor headerEditor = new HeaderEditor();
     private RequestInputBar inputBar = new RequestInputBar();
@@ -55,7 +55,7 @@ public class HttpRequestUI extends Application {
 
         VBox headersTabContent = new VBox(headerEditor);
         Tab headersTab = new Tab("Headers", headersTabContent);
-        Tab bodyTab = new Tab("Body", new VBox(bodyArea));
+        Tab bodyTab = new Tab("Body", bodyEditor);
 
         tabPane.getTabs().addAll(paramsTab, headersTab, bodyTab);
         return tabPane;
@@ -68,7 +68,7 @@ public class HttpRequestUI extends Application {
         String url = inputBar.getUrl();
 
         Map<String, String> headers = headerEditor.getHeaders(); //collectHeaders();
-        String body = bodyArea.getText().trim();
+        String body = bodyEditor.getBodyText();
 
         responseSection.setResponseBody("Sending " + method + " request to: " + url);
 
@@ -77,32 +77,13 @@ public class HttpRequestUI extends Application {
                 String formatted = JsonFormatter.prettyPrint(response.getBody());
 
                 responseSection.setResponseBody(formatted);
+                responseSection.setStatusCode(response.getStatusCode());
 
-                int statusCode = response.getStatusCode();
-                String color = switch (statusCode / 100) {
-                    case 2 -> "green";
-                    case 3 -> "blue";
-                    case 4 -> "orange";
-                    case 5 -> "red";
-                    default -> "black";
-                };
-
-                responseSection.getStatusCodeLabel().setText("Status: " + statusCode);
-                responseSection.getStatusCodeLabel().setStyle("-fx-text-fill: " + color + "; -fx-font-weight: bold;");
             }))
             .exceptionally(ex -> {
                 Platform.runLater(() -> responseSection.setResponseBody("Error: " + ex.getMessage()));
                 return null;
             });
-    }
-
-    // ────────────────────────────── UI HELPERS ──────────────────────────────
-
-    private static TextArea createBodyArea() {
-        TextArea area = new TextArea();
-        area.setPromptText("Request Body (e.g., JSON)");
-        area.setPrefRowCount(10);
-        return area;
     }
 
     public static void main(String[] args) {

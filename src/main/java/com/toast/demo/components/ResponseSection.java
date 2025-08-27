@@ -1,5 +1,6 @@
 package com.toast.demo.components;
 
+import com.toast.demo.util.StatusUtils;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -21,34 +22,28 @@ public class ResponseSection extends VBox {
         setSpacing(10);
         setPadding(new Insets(10));
 
+        setupUI();
+        setupCopyAction();
+
+        copyButton.setTooltip(new Tooltip("Copy to clipboard"));
+    }
+
+    private void setupUI() {
         responseArea.setEditable(false);
         responseArea.setWrapText(true);
         responseArea.setPrefHeight(300);
-        responseArea.setPromptText("Response will appear here...");
+        responseArea.setPromptText("Response will appear here..."); // can be removed
 
-        copyButton.setTooltip(new Tooltip("Copy to clipboard"));
-        copyButton.setOnAction(e -> handleCopy());
-
-        HBox responseLabelBox = new HBox(5, new Label("Response:"), copyButton);
         statusCodeLabel.setStyle("-fx-font-weight: bold;");
 
-        getChildren().addAll(responseLabelBox, responseArea, statusCodeLabel);
+        HBox responseHeader = new HBox(10, new Label("Response:"), copyButton);
+
+        this.setSpacing(10);
+        this.getChildren().addAll(responseHeader, responseArea, statusCodeLabel);
     }
 
     public void setResponseBody(String body) {
         responseArea.setText(body);
-    }
-
-    public void setStatusCode(int code) {
-        statusCodeLabel.setText("Status: " + code);
-        String color = switch (code / 100) {
-            case 2 -> "green";
-            case 3 -> "blue";
-            case 4 -> "orange";
-            case 5 -> "red";
-            default -> "black";
-        };
-        statusCodeLabel.setStyle("-fx-text-fill: " + color + "; -fx-font-weight: bold;");
     }
 
     public void setError(String message) {
@@ -56,29 +51,35 @@ public class ResponseSection extends VBox {
         statusCodeLabel.setText("");
     }
 
-    private void handleCopy() {
-        String responseText = responseArea.getText();
-        if (!responseText.isEmpty()) {
-            ClipboardContent content = new ClipboardContent();
-            content.putString(responseText);
-            Clipboard.getSystemClipboard().setContent(content);
+    public void setStatusCode(int statusCode) {
+        String color = StatusUtils.getColorForStatusCode(statusCode);
+        statusCodeLabel.setText("Status: " + statusCode);
+        statusCodeLabel.setStyle("-fx-text-fill: " + color + "; -fx-font-weight: bold;");
+    }
 
-            String originalText = copyButton.getText();
-            copyButton.setText("Copied!");
-            copyButton.setDisable(true);
+    private void setupCopyAction() {
+        copyButton.setOnAction(e -> {
+            String text = responseArea.getText();
+            if (!text.isEmpty()) {
+                ClipboardContent content = new ClipboardContent();
+                content.putString(text);
+                Clipboard.getSystemClipboard().setContent(content);
 
-            new Thread(() -> {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException ignored) {
-                }
+                String original = copyButton.getText();
+                copyButton.setText("Copied!");
+                copyButton.setDisable(true);
 
-                Platform.runLater(() -> {
-                    copyButton.setText(originalText);
-                    copyButton.setDisable(false);
-                });
-            }).start();
-        }
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException ignored) {}
+                    Platform.runLater(() -> {
+                        copyButton.setText(original);
+                        copyButton.setDisable(false);
+                    });
+                }).start();
+            }
+        });
     }
 
     public TextArea getResponseArea() {
