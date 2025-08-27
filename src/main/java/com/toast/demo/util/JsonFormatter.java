@@ -16,4 +16,13 @@ public class JsonFormatter {
             return json;
         }
     }
+
+    public static boolean isValidJson(String json) {
+        try {
+            mapper.readTree(json);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
