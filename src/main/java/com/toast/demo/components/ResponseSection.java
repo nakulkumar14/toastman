@@ -6,7 +6,6 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -16,7 +15,6 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 
 public class ResponseSection extends VBox {
 
-//    private final TextArea responseArea = new TextArea();
     private final StyleClassedTextArea responseArea = new StyleClassedTextArea();
     private Label statusCodeLabel = new Label();
     private Button copyButton = new Button("Copy");
@@ -46,7 +44,6 @@ public class ResponseSection extends VBox {
     }
 
     public void setResponseBody(String body) {
-//        responseArea.setText(body);
         JsonHighlighter.highlightJson(responseArea, body);
     }
 
@@ -76,7 +73,8 @@ public class ResponseSection extends VBox {
                 new Thread(() -> {
                     try {
                         Thread.sleep(500);
-                    } catch (InterruptedException ignored) {}
+                    } catch (InterruptedException ignored) {
+                    }
                     Platform.runLater(() -> {
                         copyButton.setText(original);
                         copyButton.setDisable(false);
@@ -85,10 +83,6 @@ public class ResponseSection extends VBox {
             }
         });
     }
-
-//    public TextArea getResponseArea() {
-//        return responseArea;
-//    }
 
     public Label getStatusCodeLabel() {
         return statusCodeLabel;
