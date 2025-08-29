@@ -1,5 +1,6 @@
 package com.toast.demo.ui;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -17,21 +18,30 @@ public class RequestInputBar extends HBox {
     public RequestInputBar() {
         super(10);
         setAlignment(Pos.CENTER_LEFT);
+        setPadding(new Insets(5)); // Add padding for better appearance
+        configureMethodDropdown();
+        configureUrlField();
+        configureButtons();
 
+        getChildren().addAll(methodComboBox, urlField, sendButton, codeButton);
+    }
+
+    private void configureMethodDropdown() {
         methodComboBox.getItems().addAll("GET", "POST", "PUT", "DELETE", "PATCH");
         methodComboBox.setValue("GET");
+        methodComboBox.setPrefWidth(90);
+    }
 
-        urlField.setPromptText("Enter URL (e.g. http://example.com)");
+    private void configureUrlField() {
+        urlField.setPromptText("Enter URL (e.g. https://example.com)");
         urlField.setPrefWidth(700);
+    }
 
+    private void configureButtons() {
         sendButton.setMinWidth(100);
 
         codeButton.setTooltip(new Tooltip("Show as cURL"));
-
-//        HBox bar = new HBox(10, methodComboBox, urlField, sendButton, codeButton);
-//        bar.setAlignment(Pos.CENTER_LEFT);
-
-        getChildren().addAll(methodComboBox, urlField, sendButton, codeButton);
+        codeButton.setFocusTraversable(false); // better UX: don't highlight on tab
     }
 
     public String getMethod() {

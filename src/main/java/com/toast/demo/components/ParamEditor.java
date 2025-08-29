@@ -1,5 +1,12 @@
 package com.toast.demo.components;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
@@ -10,11 +17,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-
 public class ParamEditor extends VBox {
 
     private final VBox paramRows = new VBox(5);
@@ -23,6 +25,8 @@ public class ParamEditor extends VBox {
 
     public ParamEditor() {
         setSpacing(5);
+        setPadding(new Insets(5));
+
         Button addButton = new Button("Add Param");
         addButton.setOnAction(e -> addParamRow("", ""));
 
@@ -38,7 +42,9 @@ public class ParamEditor extends VBox {
 
         // Sync when URL changes
         ChangeListener<String> urlListener = (obs, oldVal, newVal) -> {
-            if (isSyncing) return;
+            if (isSyncing) {
+                return;
+            }
             updateParamsFromUrl(newVal);
         };
         urlField.textProperty().addListener(urlListener);
@@ -59,7 +65,9 @@ public class ParamEditor extends VBox {
 
     private Map<String, String> parseQueryParams(String url) {
         Map<String, String> params = new LinkedHashMap<>();
-        if (!url.contains("?")) return params;
+        if (!url.contains("?")) {
+            return params;
+        }
 
         String query = url.substring(url.indexOf("?") + 1);
         for (String param : query.split("&")) {
@@ -95,7 +103,9 @@ public class ParamEditor extends VBox {
     }
 
     private void updateUrlFromParams() {
-        if (isSyncing || boundUrlField == null) return;
+        if (isSyncing || boundUrlField == null) {
+            return;
+        }
 
         isSyncing = true;
         try {
@@ -121,21 +131,5 @@ public class ParamEditor extends VBox {
         } finally {
             isSyncing = false;
         }
-    }
-
-    public Map<String, String> getParams() {
-        Map<String, String> params = new LinkedHashMap<>();
-        for (Node node : paramRows.getChildren()) {
-            if (node instanceof HBox hbox && hbox.getChildren().size() >= 2) {
-                TextField keyField = (TextField) hbox.getChildren().get(0);
-                TextField valueField = (TextField) hbox.getChildren().get(1);
-                String key = keyField.getText().trim();
-                String value = valueField.getText().trim();
-                if (!key.isEmpty()) {
-                    params.put(key, value);
-                }
-            }
-        }
-        return params;
     }
 }

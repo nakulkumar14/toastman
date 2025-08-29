@@ -21,9 +21,12 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 
 public class ResponseSection extends VBox {
 
+    private static final String JSON_TYPE = "application/json";
+    private static final String HTML_TYPE = "text/html";
+
     private final StyleClassedTextArea responseArea = new StyleClassedTextArea();
-    private Label statusCodeLabel = new Label();
-    private Button copyButton = new Button("Copy");
+    private final Label statusCodeLabel = new Label();
+    private final Button copyButton = new Button("Copy");
 
     private final VBox headersBox = new VBox(5);
     private final TabPane responseTabs = new TabPane();
@@ -42,7 +45,7 @@ public class ResponseSection extends VBox {
         responseArea.setEditable(false);
         responseArea.setWrapText(true);
         responseArea.setPrefHeight(300);
-//        responseArea.setPromptText("Response will appear here..."); // can be removed
+        responseArea.setStyle("-fx-font-family: monospace;");
 
         ScrollPane bodyScroll = new ScrollPane(responseArea);
         bodyScroll.setFitToWidth(true);
@@ -60,23 +63,25 @@ public class ResponseSection extends VBox {
         responseTabs.getTabs().addAll(bodyTab, headersTab);
         responseTabs.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
+        copyButton.setTooltip(new Tooltip("Copy response body to clipboard"));
         // Top bar
-        HBox responseHeader = new HBox(10, new Label("Response:"), copyButton);
+        HBox responseTopBar = new HBox(10, new Label("Response:"), copyButton);
         statusCodeLabel.setStyle("-fx-font-weight: bold;");
 
-        getChildren().addAll(responseHeader, responseTabs, statusCodeLabel);
-
-        this.setSpacing(10);
+        getChildren().addAll(responseTopBar, responseTabs, statusCodeLabel);
     }
 
     public void setResponseBody(String body, String contentType) {
-        if (contentType.contains("application/json")) {
+        if (contentType == null) {
+            contentType = "";
+        }
+        responseArea.clear();
+        if (contentType.contains(JSON_TYPE)) {
             JsonHighlighter.highlightJson(responseArea, JsonFormatter.prettyPrint(body));
-        } else if (contentType.contains("text/html")) {
+        } else if (contentType.contains(HTML_TYPE)) {
             HtmlHighlighter.highlightHtml(responseArea, body);
         } else {
-            responseArea.clear();
-            responseArea.appendText(body); // plain text fallback
+            responseArea.appendText(body);
         }
     }
 
@@ -93,15 +98,6 @@ public class ResponseSection extends VBox {
         }
     }
 
-    public void setError(String message) {
-//        responseArea.setText("Error: " + message);
-//        statusCodeLabel.setText("");
-
-        responseArea.replaceText("Error: " + message);
-        headersBox.getChildren().clear();
-        statusCodeLabel.setText("");
-    }
-
     public void setStatusCode(int statusCode) {
         String color = StatusUtils.getColorForStatusCode(statusCode);
         statusCodeLabel.setText("Status: " + statusCode);
@@ -116,29 +112,25 @@ public class ResponseSection extends VBox {
                 content.putString(text);
                 Clipboard.getSystemClipboard().setContent(content);
 
-                String original = copyButton.getText();
-                copyButton.setText("Copied!");
-                copyButton.setDisable(true);
-
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException ignored) {
-                    }
-                    Platform.runLater(() -> {
-                        copyButton.setText(original);
-                        copyButton.setDisable(false);
-                    });
-                }).start();
+                giveCopyFeedback();
             }
         });
     }
 
-    public Label getStatusCodeLabel() {
-        return statusCodeLabel;
-    }
+    private void giveCopyFeedback() {
+        String originalText = copyButton.getText();
+        copyButton.setText("Copied!");
+        copyButton.setDisable(true);
 
-    public void setStatusCodeLabel(Label statusCodeLabel) {
-        this.statusCodeLabel = statusCodeLabel;
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ignored) {
+            }
+            Platform.runLater(() -> {
+                copyButton.setText(originalText);
+                copyButton.setDisable(false);
+            });
+        }).start();
     }
 }

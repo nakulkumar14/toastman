@@ -20,51 +20,35 @@ public class CurlPane extends VBox {
     private Runnable onCloseCallback;
 
     public CurlPane() {
+        setupUI();
+        setupActions();
+    }
+
+    private void setupUI() {
         setSpacing(10);
         setPadding(new Insets(10));
-        setStyle("-fx-background-color: #f4f4f4;");
         setMinWidth(300);
+        setStyle("-fx-background-color: #f4f4f4;");
 
-
+        // cURL text area
         curlArea.setWrapText(true);
         curlArea.setEditable(false);
         curlArea.setStyle("-fx-font-family: 'monospace';");
-        VBox.setVgrow(curlArea, Priority.ALWAYS);
+        //        VBox.setVgrow(curlArea, Priority.ALWAYS);
 
         ScrollPane scrollPane = new ScrollPane(curlArea);
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
         VBox.setVgrow(scrollPane, Priority.ALWAYS);
 
+        // Top bar with controls
         HBox topBar = new HBox(10, new Label("cURL Preview:"), copyButton, closeButton);
-        getChildren().addAll(topBar, scrollPane);
 
-        setupActions();
+        getChildren().addAll(topBar, scrollPane);
     }
 
     private void setupActions() {
-        copyButton.setOnAction(e -> {
-            String text = curlArea.getText();
-            if (!text.isEmpty()) {
-                ClipboardContent content = new ClipboardContent();
-                content.putString(text);
-                Clipboard.getSystemClipboard().setContent(content);
-                copyButton.setText("Copied!");
-                copyButton.setDisable(true);
-
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException ignored) {
-                    }
-                    javafx.application.Platform.runLater(() -> {
-                        copyButton.setText("Copy");
-                        copyButton.setDisable(false);
-                    });
-                }).start();
-            }
-        });
-
+        copyButton.setOnAction(e -> copyCurlToClipboard());
         closeButton.setOnAction(e -> {
             if (onCloseCallback != null) {
                 onCloseCallback.run();
@@ -72,12 +56,37 @@ public class CurlPane extends VBox {
         });
     }
 
+    private void copyCurlToClipboard() {
+        String text = curlArea.getText().trim();
+        if (text.isEmpty()) {
+            return;
+        }
+
+        ClipboardContent content = new ClipboardContent();
+        content.putString(text);
+        Clipboard.getSystemClipboard().setContent(content);
+
+        // Temporary UI feedback
+        copyButton.setText("Copied!");
+        copyButton.setDisable(true);
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ignored) {
+            }
+            javafx.application.Platform.runLater(() -> {
+                copyButton.setText("Copy");
+                copyButton.setDisable(false);
+            });
+        }).start();
+    }
+
     public void setCurlCommand(String command) {
         curlArea.setText(command);
     }
 
     public void setOnClose(Runnable onClose) {
-//        closeButton.setOnAction(e -> onClose.run());
         this.onCloseCallback = onClose;
     }
 }

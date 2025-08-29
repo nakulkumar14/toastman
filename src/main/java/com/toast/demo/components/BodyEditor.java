@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 
 public class BodyEditor extends VBox {
 
-    private final TextArea bodyArea;
+    private final TextArea bodyArea = new TextArea();
     private final ComboBox<String> bodyTypeComboBox = new ComboBox<>();
     private final CheckBox prettyPrintToggle = new CheckBox("Pretty Print");
     private final Label errorLabel = new Label();
@@ -21,7 +21,6 @@ public class BodyEditor extends VBox {
     private String lastRawBody = "";
 
     public BodyEditor() {
-        this.bodyArea = new TextArea();
         setupUI();
         setupListeners();
     }
@@ -47,45 +46,59 @@ public class BodyEditor extends VBox {
     }
 
     private void setupListeners() {
-        prettyPrintToggle.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-            if (isSelected) {
-                String formatted = JsonFormatter.prettyPrint(bodyArea.getText());
-                if (formatted != null) {
-                    lastRawBody = bodyArea.getText();
-                    bodyArea.setText(formatted);
-                } else {
-                    prettyPrintToggle.setSelected(false); // invalid JSON
-                }
-            } else {
-                if (!lastRawBody.isEmpty()) {
-                    bodyArea.setText(lastRawBody);
-                }
-            }
-        });
+        prettyPrintToggle.selectedProperty().addListener((obs, wasSelected, isSelected) -> togglePrettyPrint(isSelected));
 
         // Validate JSON format on body change if JSON is selected
-        ChangeListener<String> validationListener = (obs, oldText, newText) -> {
-            if (getBodyType().equalsIgnoreCase("JSON")) {
-                boolean valid = JsonFormatter.isValidJson(newText);
-                errorLabel.setVisible(!valid);
-                errorLabel.setText(valid ? "" : "Invalid JSON format");
-                bodyArea.setStyle(valid ? "" : "-fx-border-color: red;");
-            } else {
-                errorLabel.setVisible(false);
-                bodyArea.setStyle("");
-            }
-        };
+        ChangeListener<String> validationListener = (obs, oldVal, newVal) -> validateJsonIfNeeded(newVal);
 
         bodyArea.textProperty().addListener(validationListener);
         bodyTypeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             // Re-validate when body type changes
-            validationListener.changed(null, null, bodyArea.getText());
+            validateJsonIfNeeded(bodyArea.getText());
         });
     }
 
-//    public String getBody() {
-//        return bodyArea.getText();
-//    }
+    private void togglePrettyPrint(boolean enablePrettyPrint) {
+        if (enablePrettyPrint) {
+            String formatted = JsonFormatter.prettyPrint(bodyArea.getText());
+            if (formatted != null) {
+                lastRawBody = bodyArea.getText();
+                bodyArea.setText(formatted);
+            } else {
+                showValidationError("Invalid JSON format");
+                prettyPrintToggle.setSelected(false);
+            }
+        } else {
+            if (!lastRawBody.isEmpty()) {
+                bodyArea.setText(lastRawBody);
+            }
+        }
+    }
+
+    private void validateJsonIfNeeded(String text) {
+        if (!"JSON".equalsIgnoreCase(getBodyType())) {
+            hideValidationError();
+            return;
+        }
+
+        boolean valid = JsonFormatter.isValidJson(text);
+        if (valid) {
+            hideValidationError();
+        } else {
+            showValidationError("Invalid JSON format");
+        }
+    }
+
+    private void showValidationError(String message) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
+        bodyArea.setStyle("-fx-border-color: red;");
+    }
+
+    private void hideValidationError() {
+        errorLabel.setVisible(false);
+        bodyArea.setStyle("");
+    }
 
     public String getBodyType() {
         return bodyTypeComboBox.getValue();
@@ -93,13 +106,5 @@ public class BodyEditor extends VBox {
 
     public String getBodyText() {
         return bodyArea.getText().trim();
-    }
-
-    public void setBodyText(String text) {
-        bodyArea.setText(text);
-    }
-
-    public TextArea getTextArea() {
-        return bodyArea;
     }
 }

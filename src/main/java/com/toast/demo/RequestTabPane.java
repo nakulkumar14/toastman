@@ -6,20 +6,12 @@ import javafx.scene.control.TabPane;
 
 public class RequestTabPane extends TabPane {
 
-    private final Tab addTab = new Tab("+");
+    private final Tab addTab = createAddTab();
+    private int tabCounter = 1;
 
     public RequestTabPane() {
         setTabClosingPolicy(TabClosingPolicy.ALL_TABS);
-
-        // Initialize + tab
-        addTab.setClosable(false);
-        // Add the "+" tab first
-        this.getTabs().add(addTab);
-
-        // Add one default request tab at index 0
-        RequestTab defaultTab = new RequestTab("Tab 1");
-        this.getTabs().add(0, defaultTab);
-        this.getSelectionModel().select(defaultTab); // Select it by default
+        initializeTabs();
 
         // Now configure the "+" tab behavior
         addTab.setOnSelectionChanged(e -> {
@@ -29,10 +21,36 @@ public class RequestTabPane extends TabPane {
         });
     }
 
+    private void initializeTabs() {
+        // Create and add initial request tab
+        RequestTab firstTab = createRequestTab("Tab " + tabCounter++);
+        getTabs().add(firstTab);
+
+        // Add "+" tab
+        getTabs().add(addTab);
+        getSelectionModel().select(firstTab);
+    }
+
+    private Tab createAddTab() {
+        Tab tab = new Tab("+");
+        tab.setClosable(false);
+
+        tab.setOnSelectionChanged(e -> {
+            if (tab.isSelected()) {
+                addRequestTab();
+            }
+        });
+
+        return tab;
+    }
+
     private void addRequestTab() {
-        int index = getTabs().size(); // +1 for "Add" tab
-        RequestTab newTab = new RequestTab("Tab " + index);
-        this.getTabs().add(getTabs().size() - 1, newTab);
-        this.getSelectionModel().select(newTab);
+        RequestTab newTab = createRequestTab("Tab " + tabCounter++);
+        this.getTabs().add(getTabs().size() - 1, newTab); // Add before "+" tab
+        this.getSelectionModel().select(newTab);    // Auto-select the new tab
+    }
+
+    private RequestTab createRequestTab(String title) {
+        return new RequestTab(title);
     }
 }

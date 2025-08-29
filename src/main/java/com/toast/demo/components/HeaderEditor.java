@@ -9,26 +9,37 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class HeaderEditor extends VBox {
 
     private final VBox headerRows = new VBox(5);
+    private final ScrollPane scrollPane = new ScrollPane();
 
     public HeaderEditor() {
         setSpacing(5);
-        Button addButton = new Button("Add Header");
-        addButton.setOnAction(e -> addHeaderRow("", ""));
+        setPadding(new Insets(5));
 
-        ScrollPane scrollPane = new ScrollPane(headerRows);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setPrefHeight(150);
-
-        getChildren().addAll(addButton, scrollPane);
+        setupScrollPane();
+        setupAddButton();
 
         // Add a default row
         addHeaderRow("Content-Type", "application/json");
+    }
+
+    private void setupScrollPane() {
+        scrollPane.setContent(headerRows);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPrefHeight(150);
+        getChildren().add(scrollPane);
+    }
+
+    private void setupAddButton() {
+        Button addButton = new Button("Add Header");
+        addButton.setOnAction(e -> addHeaderRow("", ""));
+        getChildren().add(0, addButton); // Add on top
     }
 
     public void addHeaderRow(String key, String value) {
@@ -42,6 +53,8 @@ public class HeaderEditor extends VBox {
         valueField.setPromptText("Header Value");
 
         Button removeButton = new Button("X");
+        removeButton.setTooltip(new Tooltip("Remove this header"));
+
         HBox row = new HBox(10, keyField, valueField, removeButton);
         row.setPadding(new Insets(5));
 
