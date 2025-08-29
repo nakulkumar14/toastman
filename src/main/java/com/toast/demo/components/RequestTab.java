@@ -2,13 +2,20 @@ package com.toast.demo.components;
 
 import com.toast.demo.service.HttpRequestService;
 import com.toast.demo.ui.RequestInputBar;
-import com.toast.demo.util.JsonFormatter;
+import com.toast.demo.util.CurlGenerator;
 import java.util.Map;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class RequestTab extends Tab {
 
@@ -29,6 +36,7 @@ public class RequestTab extends Tab {
         setContent(layout);
 
         paramEditor.bindToUrlField(inputBar.getUrlField());
+        inputBar.getCodeButton().setOnAction(e -> showCurlPopup());
         inputBar.onSend(this::executeRequest);
     }
 
@@ -58,9 +66,6 @@ public class RequestTab extends Tab {
         httpRequestService.sendRequest(method, url, headers, body)
             .thenAccept(response -> Platform.runLater(() -> {
 
-//                System.out.println("content-type: " + response.getContentType());
-//                System.out.println("body: " + response.getBody().substring(0, 100));
-
                 responseSection.setResponseBody(response.getBody(), response.getContentType());
                 responseSection.setStatusCode(response.getStatusCode());
                 responseSection.setResponseHeaders(response.getHeaders());
@@ -72,4 +77,52 @@ public class RequestTab extends Tab {
                 return null;
             });
     }
+
+    private void showCurlPopup() {
+        String method = inputBar.getMethod();
+        String url = inputBar.getUrl();
+        Map<String, String> headers = headerEditor.getHeaders();
+        String body = bodyEditor.getBodyText(); // assuming you modularized BodyEditor
+
+        String curlCommand = CurlGenerator.generateCurl(method, url, headers, body);
+
+        TextArea curlArea = new TextArea(curlCommand);
+        curlArea.setWrapText(true);
+        curlArea.setEditable(false);
+        curlArea.setPrefRowCount(8);
+
+        VBox popupLayout = getPopupLayout(curlCommand, curlArea);
+
+        Stage popup = new Stage();
+        popup.setTitle("cURL Preview");
+        popup.setScene(new Scene(popupLayout, 800, 300));
+        popup.initOwner(inputBar.getScene().getWindow());
+        popup.show();
+    }
+
+    private static VBox getPopupLayout(String curlCommand, TextArea curlArea) {
+        Button copyButton = new Button("Copy");
+        copyButton.setOnAction(ev -> {
+            ClipboardContent content = new ClipboardContent();
+            content.putString(curlCommand);
+            Clipboard.getSystemClipboard().setContent(content);
+            copyButton.setText("Copied!");
+            copyButton.setDisable(true);
+            new Thread(() -> {
+                try {
+                    Thread.sleep(800);
+                } catch (InterruptedException ignored) {
+                }
+                Platform.runLater(() -> {
+                    copyButton.setText("Copy");
+                    copyButton.setDisable(false);
+                });
+            }).start();
+        });
+
+        VBox popupLayout = new VBox(10, new Label("Generated cURL Command:"), curlArea, copyButton);
+        popupLayout.setPadding(new Insets(15));
+        return popupLayout;
+    }
+
 }

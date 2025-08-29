@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 
 public class RequestInputBar extends HBox {
@@ -11,6 +12,7 @@ public class RequestInputBar extends HBox {
     private final ComboBox<String> methodComboBox = new ComboBox<>();
     private final TextField urlField = new TextField();
     private final Button sendButton = new Button("Send");
+    private final Button codeButton = new Button("💻");
 
     public RequestInputBar() {
         super(10);
@@ -24,7 +26,12 @@ public class RequestInputBar extends HBox {
 
         sendButton.setMinWidth(100);
 
-        getChildren().addAll(methodComboBox, urlField, sendButton);
+        codeButton.setTooltip(new Tooltip("Show as cURL"));
+
+//        HBox bar = new HBox(10, methodComboBox, urlField, sendButton, codeButton);
+//        bar.setAlignment(Pos.CENTER_LEFT);
+
+        getChildren().addAll(methodComboBox, urlField, sendButton, codeButton);
     }
 
     public String getMethod() {
@@ -45,5 +52,9 @@ public class RequestInputBar extends HBox {
 
     public TextField getUrlField() {
         return urlField;
+    }
+
+    public Button getCodeButton() {
+        return codeButton;
     }
 }
