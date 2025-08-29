@@ -2,10 +2,14 @@ package com.toast.demo.components;
 
 import com.toast.demo.util.JsonHighlighter;
 import com.toast.demo.util.StatusUtils;
+import java.util.Map;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -18,6 +22,9 @@ public class ResponseSection extends VBox {
     private final StyleClassedTextArea responseArea = new StyleClassedTextArea();
     private Label statusCodeLabel = new Label();
     private Button copyButton = new Button("Copy");
+
+    private final VBox headersBox = new VBox(5);
+    private final TabPane responseTabs = new TabPane();
 
     public ResponseSection() {
         setSpacing(10);
@@ -35,20 +42,59 @@ public class ResponseSection extends VBox {
         responseArea.setPrefHeight(300);
 //        responseArea.setPromptText("Response will appear here..."); // can be removed
 
+        ScrollPane bodyScroll = new ScrollPane(responseArea);
+        bodyScroll.setFitToWidth(true);
+
+        Tab bodyTab = new Tab("Body", bodyScroll);
+        bodyTab.setClosable(false);
+
+        // Headers tab
+        ScrollPane headersScroll = new ScrollPane(headersBox);
+        headersScroll.setFitToWidth(true);
+
+        Tab headersTab = new Tab("Headers", headersScroll);
+        headersTab.setClosable(false);
+
+        responseTabs.getTabs().addAll(bodyTab, headersTab);
+        responseTabs.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+
+        // Top bar
+        HBox responseHeader = new HBox(10, new Label("Response:"), copyButton);
         statusCodeLabel.setStyle("-fx-font-weight: bold;");
 
-        HBox responseHeader = new HBox(10, new Label("Response:"), copyButton);
+        getChildren().addAll(responseHeader, responseTabs, statusCodeLabel);
+
+//        statusCodeLabel.setStyle("-fx-font-weight: bold;");
+
+//        HBox responseHeader = new HBox(10, new Label("Response:"), copyButton);
 
         this.setSpacing(10);
-        this.getChildren().addAll(responseHeader, responseArea, statusCodeLabel);
+//        this.getChildren().addAll(responseHeader, responseArea, statusCodeLabel);
     }
 
     public void setResponseBody(String body) {
         JsonHighlighter.highlightJson(responseArea, body);
     }
 
+    public void setResponseHeaders(Map<String, String> headers) {
+        headersBox.getChildren().clear();
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            Label key = new Label(entry.getKey() + ":");
+            key.setStyle("-fx-font-weight: bold;");
+            Label value = new Label(entry.getValue());
+
+            HBox row = new HBox(10, key, value);
+            row.setPadding(new Insets(2));
+            headersBox.getChildren().add(row);
+        }
+    }
+
     public void setError(String message) {
 //        responseArea.setText("Error: " + message);
+//        statusCodeLabel.setText("");
+
+        responseArea.replaceText("Error: " + message);
+        headersBox.getChildren().clear();
         statusCodeLabel.setText("");
     }
 

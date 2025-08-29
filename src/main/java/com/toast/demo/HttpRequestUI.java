@@ -81,6 +81,8 @@ public class HttpRequestUI extends Application {
 
                 responseSection.setResponseBody(formatted);
                 responseSection.setStatusCode(response.getStatusCode());
+                responseSection.setResponseHeaders(response.getHeaders());
+
 
             }))
             .exceptionally(ex -> {

@@ -41,7 +41,7 @@ public class HttpRequestService {
             HttpRequest request = builder.build();
 
             return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(response -> new HttpResponseDTO(response.statusCode(), response.body()));
+                .thenApply(response -> new HttpResponseDTO(response.statusCode(), response.body(), response.headers()));
 
         } catch (Exception e) {
             CompletableFuture<HttpResponseDTO> failedFuture = new CompletableFuture<>();
