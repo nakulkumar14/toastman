@@ -53,20 +53,22 @@ public class RequestTab extends Tab {
         Map<String, String> headers = headerEditor.getHeaders(); //collectHeaders();
         String body = bodyEditor.getBodyText();
 
-        responseSection.setResponseBody("Sending " + method + " request to: " + url);
+        responseSection.setResponseBody("Sending " + method + " request to: " + url, "");
 
         httpRequestService.sendRequest(method, url, headers, body)
             .thenAccept(response -> Platform.runLater(() -> {
-                String formatted = JsonFormatter.prettyPrint(response.getBody());
 
-                responseSection.setResponseBody(formatted);
+//                System.out.println("content-type: " + response.getContentType());
+//                System.out.println("body: " + response.getBody().substring(0, 100));
+
+                responseSection.setResponseBody(response.getBody(), response.getContentType());
                 responseSection.setStatusCode(response.getStatusCode());
                 responseSection.setResponseHeaders(response.getHeaders());
 
 
             }))
             .exceptionally(ex -> {
-                Platform.runLater(() -> responseSection.setResponseBody("Error: " + ex.getMessage()));
+                Platform.runLater(() -> responseSection.setResponseBody("Error: " + ex.getMessage(), "text/plain"));
                 return null;
             });
     }

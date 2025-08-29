@@ -1,9 +1,20 @@
 .json-string {
   -fx-fill: #dc8262;
 }
+
 .json-number {
   -fx-fill: #ff9900;
 }
+
 .json-boolean {
   -fx-fill: #cc33cc;
+}
+
+.html-tag {
+  -fx-fill: #d73a49;
+  -fx-font-weight: bold;
+}
+
+.html-text {
+  -fx-fill: #24292e;
 }

@@ -1,19 +1,20 @@
 package com.toast.demo.model;
 
 import java.net.http.HttpHeaders;
+import java.util.HashMap;
 import java.util.Map;
 
 public class HttpResponseDTO {
 
-    private int statusCode;
-    private String body;
-    private Map<String, String> headers;
+    private final int statusCode;
+    private final String body;
+    private final Map<String, String> headers;
 
     public HttpResponseDTO(int statusCode, String body, HttpHeaders headers) {
         this.statusCode = statusCode;
         this.body = body;
-        this.headers = headers.map().entrySet().stream()
-                .collect(java.util.stream.Collectors.toMap(Map.Entry::getKey, e -> String.join(", ", e.getValue())));
+        this.headers = new HashMap<>();
+        headers.map().forEach((key, values) -> this.headers.put(key.toLowerCase(), String.join(", ", values)));
     }
 
     public int getStatusCode() {
@@ -26,5 +27,9 @@ public class HttpResponseDTO {
 
     public Map<String, String> getHeaders() {
         return headers;
+    }
+
+    public String getContentType() {
+        return headers.getOrDefault("content-type", "");
     }
 }

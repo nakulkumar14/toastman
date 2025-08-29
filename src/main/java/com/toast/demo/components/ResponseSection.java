@@ -1,5 +1,7 @@
 package com.toast.demo.components;
 
+import com.toast.demo.util.HtmlHighlighter;
+import com.toast.demo.util.JsonFormatter;
 import com.toast.demo.util.JsonHighlighter;
 import com.toast.demo.util.StatusUtils;
 import java.util.Map;
@@ -64,16 +66,18 @@ public class ResponseSection extends VBox {
 
         getChildren().addAll(responseHeader, responseTabs, statusCodeLabel);
 
-//        statusCodeLabel.setStyle("-fx-font-weight: bold;");
-
-//        HBox responseHeader = new HBox(10, new Label("Response:"), copyButton);
-
         this.setSpacing(10);
-//        this.getChildren().addAll(responseHeader, responseArea, statusCodeLabel);
     }
 
-    public void setResponseBody(String body) {
-        JsonHighlighter.highlightJson(responseArea, body);
+    public void setResponseBody(String body, String contentType) {
+        if (contentType.contains("application/json")) {
+            JsonHighlighter.highlightJson(responseArea, JsonFormatter.prettyPrint(body));
+        } else if (contentType.contains("text/html")) {
+            HtmlHighlighter.highlightHtml(responseArea, body);
+        } else {
+            responseArea.clear();
+            responseArea.appendText(body); // plain text fallback
+        }
     }
 
     public void setResponseHeaders(Map<String, String> headers) {
