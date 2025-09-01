@@ -5,16 +5,23 @@ import java.util.Map;
 public class CurlGenerator {
 
     public static String generateCurl(String method, String url, Map<String, String> headers, String body) {
+
+        if (method == null || url == null) {
+            throw new IllegalArgumentException("Method and URL cannot be null");
+        }
+
         StringBuilder curl = new StringBuilder("curl -X " + method.toUpperCase());
 
-        // Append headers
-        for (Map.Entry<String, String> entry : headers.entrySet()) {
-            curl.append(" -H ")
-                .append("\"")
-                .append(entry.getKey())
-                .append(": ")
-                .append(entry.getValue())
-                .append("\"");
+        if (headers != null && !headers.isEmpty()) {
+            // Append headers
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                curl.append(" -H ")
+                    .append("\"")
+                    .append(entry.getKey())
+                    .append(": ")
+                    .append(entry.getValue())
+                    .append("\"");
+            }
         }
 
         // Append body (for POST/PUT)

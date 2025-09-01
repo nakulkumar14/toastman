@@ -3,9 +3,13 @@ package com.toast.demo.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-public class JsonFormatter {
+public final class JsonFormatter {
 
     private static final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+
+    // Prevent instantiation
+    private JsonFormatter() {
+    }
 
     public static String prettyPrint(String json) {
         try {
