@@ -4,6 +4,7 @@ import com.toast.demo.RequestTabPane;
 import com.toast.demo.model.Collection;
 import com.toast.demo.model.SavedRequest;
 import com.toast.demo.service.CollectionsStore;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
@@ -35,6 +36,11 @@ public class CollectionsView extends BorderPane {
         setCenter(treeView);
 
         setTop(toolBar);
+
+        // Listen to store changes
+        store.addListener(updatedCollections -> {
+            Platform.runLater(this::refresh);
+        });
 
         // List of saved collection
         refresh();
@@ -77,13 +83,21 @@ public class CollectionsView extends BorderPane {
         TreeItem<Object> root = new TreeItem<>("Collections");
         root.setExpanded(true);
 
-        for (Collection collection : store.getCollections()) {
-            TreeItem<Object> collectionItem = new TreeItem<>(collection.getName());
-            root.getChildren().add(collectionItem);
+//        for (Collection collection : store.getCollections()) {
+//            TreeItem<Object> collectionItem = new TreeItem<>(collection.getName());
+//            root.getChildren().add(collectionItem);
+//
+//            collection.getRequests().forEach(req ->
+//                collectionItem.getChildren().add(new TreeItem<>(req))
+//            );
+//        }
 
-            collection.getRequests().forEach(req ->
-                collectionItem.getChildren().add(new TreeItem<>(req))
-            );
+        for (Collection col : store.getCollections()) {
+            TreeItem<Object> collectionItem = new TreeItem<>(col);
+            for (SavedRequest req : col.getRequests()) {
+                collectionItem.getChildren().add(new TreeItem<>(req));
+            }
+            root.getChildren().add(collectionItem);
         }
 
         treeView.setRoot(root);

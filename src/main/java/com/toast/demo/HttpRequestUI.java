@@ -68,13 +68,6 @@ public class HttpRequestUI extends Application {
 
         sidebar.getChildren().addAll(collectionsBtn);
 
-
-        // Requests button (switch back to tabPane)
-//        Button requestsBtn = new Button("📝"); // icon placeholder
-//        requestsBtn.getStyleClass().add("sidebar-button");
-//        requestsBtn.setOnAction(e -> root.setCenter(tabPane));
-
-//        sidebar.getChildren().addAll(collectionsBtn, requestsBtn);
         return sidebar;
     }
 

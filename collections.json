@@ -1,15 +1,24 @@
 [ {
   "name" : "Default",
-  "requests" : [ ]
+  "requests" : [ {
+    "id" : "253d33b3-a851-4518-8a54-b47dc56a349d",
+    "name" : "google",
+    "method" : "GET",
+    "url" : "http://google.com",
+    "headers" : {
+      "Content-Type" : "application/json"
+    },
+    "body" : ""
+  } ]
 }, {
   "name" : "New Collection",
   "requests" : [ {
-    "id" : "13b107d7-2f41-467c-8682-a9dd6fbdf0e6",
-    "name" : "get clients",
+    "id" : "a33c2a92-b8e2-4761-b9fb-3dd25e4364fc",
+    "name" : "a",
     "method" : "GET",
-    "url" : "https://cns.vsignon.com/acs/oauth2clients",
+    "url" : "http://google.com",
     "headers" : {
-      "Authorization" : "HZN eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE3NTY5MDcwMzUsImlhdCI6MTc1Njg5NjIzNSwic3ViIjoiMWQ5ODA3YmYtMDI1Yi00ZGUxLWFhMTYtZGNmZTk4YThhYzRkIiwiYXV0aF90aW1lIjoxNzU2ODk2MjM1LCJzY3AiOiJhZG1pbiBzeXN0ZW0iLCJhdWQiOiJodHRwczovL2Nucy52c2lnbm9uLmNvbS9TQUFTL2F1dGgvb2F1dGh0b2tlbiIsInVzZXJfaWQiOiIyNzI0NTY3IiwiZW1sIjoiT0F1dGhDbGllbnRfSFcyMzM1MjZzeXN0ZW1jbGllbnRAbm9yZXBseS5jb20iLCJhenAiOiJIVy0yMzM1MjYtc3lzdGVtLWNsaWVudCIsImlzcyI6Imh0dHBzOi8vY25zLnZzaWdub24uY29tL1NBQVMvYXV0aCIsInJ1bGVzIjp7ImV4cGlyeSI6MTc1NjkwNzAzNSwibGluayI6bnVsbCwicnVsZXMiOlt7InJlc291cmNlcyI6WyIqIl0sImFjdGlvbnMiOlsiKiJdLCJjb25kaXRpb25zIjpudWxsLCJhZHZpY2UiOm51bGx9XX0sInBpZCI6IjJkMjU2NjE1LTIxNzAtNGMyMC04OGM4LWViMmE2Y2IxNjBiOCIsInBybl90eXBlIjoiU0VSVklDRSIsInBybiI6IkhXLTIzMzUyNi1zeXN0ZW0tY2xpZW50QENOUyIsImp0aSI6IjJkMjU2NjE1LTIxNzAtNGMyMC04OGM4LWViMmE2Y2IxNjBiOCIsImNpZCI6IkhXLTIzMzUyNi1zeXN0ZW0tY2xpZW50In0.cd5aXv1-8-YQCydskidcjPz4bWDU968T-dDLsWXfO2fGwGPKAOy8NBENyTtXoCEbDA3l-r9CH7SRHNUmJPtvHIwSphfH4568sgS_grGMLi_tYs1FCup3gcfHn1rvUNaFN6iDKVKe8aJ_o2pyjIlUa7cRsc5nUqRuQt013AZqzUi_sPMIQvAzDTARccEgNLkZQsHchwJYj1MZXaTY3yZGijFep49CzNyIlgANd9q9lDQ_ovo9FSGdl7aDU5O6YgQbtm-qx7t4cWRJXndw1LfJKSA015N08lxDYg-ibzLbJIc3RasAAtkOBEsiHKwj7WqhyhpEKJRDcg63syJAQbOpow"
+      "Content-Type" : "application/json"
     },
     "body" : ""
   } ]

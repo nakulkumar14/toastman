@@ -9,13 +9,16 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CollectionsStore {
 
     private static final String FILE_PATH = "collections.json";
     private static final CollectionsStore INSTANCE = new CollectionsStore();
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final List<Consumer<List<Collection>>> listeners = new ArrayList<>();
 
     private List<Collection> collections = new ArrayList<>();
 
@@ -33,7 +36,23 @@ public class CollectionsStore {
 
     public void addCollection(Collection collection) {
         collections.add(collection);
+        saveAndNotify();
+    }
+
+    // Event system
+    public void addListener(Consumer<List<Collection>> listener) {
+        listeners.add(listener);
+    }
+
+    private void saveAndNotify() {
         save();
+        notifyListeners();
+    }
+
+    private void notifyListeners() {
+        for (Consumer<List<Collection>> listener : listeners) {
+            listener.accept(Collections.unmodifiableList(collections));
+        }
     }
 
     public void save() {
@@ -73,16 +92,14 @@ public class CollectionsStore {
 
     public void removeCollectionByName(String name) {
         collections.removeIf(c -> c.getName().equals(name));
-        save();
+        saveAndNotify();
     }
 
     public void addRequestToCollection(String collectionName, SavedRequest request) {
-        for (Collection collection : collections) {
-            if (collection.getName().equals(collectionName)) {
-                collection.addRequest(request);
-                save();
-                return;
-            }
-        }
+        collections.stream()
+            .filter(c -> c.getName().equals(collectionName))
+            .findFirst()
+            .ifPresent(c -> c.getRequests().add(request));
+        saveAndNotify();
     }
 }
