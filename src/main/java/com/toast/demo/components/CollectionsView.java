@@ -114,8 +114,8 @@ public class CollectionsView extends BorderPane {
         tab.getInputBar().setMethod(req.getMethod());
         tab.getHeaderEditor().setHeaders(req.getHeaders());
         tab.getBodyEditor().setBodyText(req.getBody());
-
-        tabPane.getTabs().add(tab);
+        
+        tabPane.getTabs().add(tabPane.getTabs().size() - 1, tab); // before the + tab
         tabPane.getSelectionModel().select(tab);
     }
 }
