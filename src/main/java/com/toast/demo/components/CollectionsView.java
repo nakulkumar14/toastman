@@ -83,15 +83,6 @@ public class CollectionsView extends BorderPane {
         TreeItem<Object> root = new TreeItem<>("Collections");
         root.setExpanded(true);
 
-//        for (Collection collection : store.getCollections()) {
-//            TreeItem<Object> collectionItem = new TreeItem<>(collection.getName());
-//            root.getChildren().add(collectionItem);
-//
-//            collection.getRequests().forEach(req ->
-//                collectionItem.getChildren().add(new TreeItem<>(req))
-//            );
-//        }
-
         for (Collection col : store.getCollections()) {
             TreeItem<Object> collectionItem = new TreeItem<>(col);
             for (SavedRequest req : col.getRequests()) {

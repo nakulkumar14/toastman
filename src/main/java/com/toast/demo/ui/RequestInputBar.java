@@ -10,7 +10,7 @@ import javafx.scene.layout.HBox;
 
 public class RequestInputBar extends HBox {
 
-    private ComboBox<String> methodComboBox = new ComboBox<>();
+    private final ComboBox<String> methodComboBox = new ComboBox<>();
     private final TextField urlField = new TextField();
     private final Button sendButton = new Button("Send");
     private final Button codeButton = new Button("💻");
