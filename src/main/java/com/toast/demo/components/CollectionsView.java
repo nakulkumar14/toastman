@@ -1,5 +1,6 @@
 package com.toast.demo.components;
 
+import com.toast.demo.RequestTabPane;
 import com.toast.demo.model.Collection;
 import com.toast.demo.model.SavedRequest;
 import com.toast.demo.service.CollectionsStore;
@@ -7,16 +8,20 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToolBar;
+import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
 
 public class CollectionsView extends BorderPane {
 
-    private final TreeView<String> treeView = new TreeView<>();
+    private final TreeView<Object> treeView = new TreeView<>();
     private final CollectionsStore store = CollectionsStore.getInstance();
+    private final RequestTabPane tabPane;
 
-    public CollectionsView() {
+
+    public CollectionsView(RequestTabPane tabPane) {
+        this.tabPane = tabPane;
         setPrefWidth(250);
         setPadding(new Insets(10));
 
@@ -48,11 +53,19 @@ public class CollectionsView extends BorderPane {
 
         // delete collection
         deleteButton.setOnAction(e -> {
-            TreeItem<String> selected = treeView.getSelectionModel().getSelectedItem();
-            if (selected != null && selected.getParent() == treeView.getRoot()) {
-                String name = selected.getValue();
-                store.removeCollectionByName(name);
+            TreeItem<Object> selected = treeView.getSelectionModel().getSelectedItem();
+            if (selected != null && selected.getValue() instanceof Collection collection) {
+                store.removeCollectionByName(collection.getName());
                 refresh();
+            }
+        });
+
+        treeView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                TreeItem<Object> selected = treeView.getSelectionModel().getSelectedItem();
+                if (selected != null && selected.getValue() instanceof SavedRequest req) {
+                    openRequestInNewTab(req);
+                }
             }
         });
 
@@ -60,18 +73,49 @@ public class CollectionsView extends BorderPane {
     }
 
     public void refresh() {
-        TreeItem<String> root = new TreeItem<>("Collections");
+        TreeItem<Object> root = new TreeItem<>("Collections");
         root.setExpanded(true);
 
         for (Collection collection : store.getCollections()) {
-            TreeItem<String> collectionItem = new TreeItem<>(collection.getName());
+            TreeItem<Object> collectionItem = new TreeItem<>(collection.getName());
             root.getChildren().add(collectionItem);
 
             collection.getRequests().forEach(req ->
-                collectionItem.getChildren().add(new TreeItem<>(req.getName()))
+                collectionItem.getChildren().add(new TreeItem<>(req))
             );
         }
 
         treeView.setRoot(root);
+        treeView.setShowRoot(false);
+
+        // custom cell factory: display names
+        treeView.setCellFactory(tv -> new TreeCell<>() {
+            @Override
+            protected void updateItem(Object item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else if (item instanceof Collection c) {
+                    setText(c.getName());
+                } else if (item instanceof SavedRequest r) {
+                    setText(r.getName());
+                } else {
+                    setText(item.toString());
+                }
+            }
+        });
+    }
+
+    private void openRequestInNewTab(SavedRequest req) {
+        RequestTab tab = new RequestTab(req.getName());
+
+        // pre-fill values
+        tab.getInputBar().setUrl(req.getUrl());
+        tab.getInputBar().setMethod(req.getMethod());
+        tab.getHeaderEditor().setHeaders(req.getHeaders());
+        tab.getBodyEditor().setBodyText(req.getBody());
+
+        tabPane.getTabs().add(tab);
+        tabPane.getSelectionModel().select(tab);
     }
 }

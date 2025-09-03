@@ -82,4 +82,9 @@ public class HeaderEditor extends VBox {
 
         return headers;
     }
+
+    public void setHeaders(Map<String, String> headers) {
+        headerRows.getChildren().clear();
+        headers.forEach(this::addHeaderRow);
+    }
 }

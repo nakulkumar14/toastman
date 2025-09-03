@@ -50,7 +50,7 @@ public class HttpRequestUI extends Application {
         root.setLeft(leftContainer);
 
         // Collections view (hidden by default)
-        CollectionsView collectionsView = new CollectionsView();
+        CollectionsView collectionsView = new CollectionsView(tabPane);
         collectionsView.setVisible(false);
         collectionsView.setManaged(false); // ensures layout doesn’t reserve space
 

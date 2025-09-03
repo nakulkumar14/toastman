@@ -124,25 +124,6 @@ public class RequestTab extends Tab {
     }
 
     private void saveToCollection() {
-//        TextInputDialog dialog = new TextInputDialog("New Request");
-//        dialog.setTitle("Save Request");
-//        dialog.setHeaderText("Enter request name");
-//        dialog.setContentText("Name:");
-//
-//        dialog.showAndWait().ifPresent(name -> {
-//            SavedRequest request = new SavedRequest(
-//                name,
-//                inputBar.getMethod(),
-//                inputBar.getUrl(),
-//                headerEditor.getHeaders(),
-//                bodyEditor.getBodyText()
-//            );
-//
-//            Collection defaultCollection = CollectionsStore.getInstance().getCollections().get(0);
-//            defaultCollection.addRequest(request);
-//
-//            System.out.println("Saved request: " + name);
-//        });
 
         Dialog<SavedRequest> dialog = new Dialog<>();
         dialog.setTitle("Save Request");
@@ -190,6 +171,18 @@ public class RequestTab extends Tab {
             String collectionName = collectionBox.getValue();
             CollectionsStore.getInstance().addRequestToCollection(collectionName, savedRequest);
         });
+    }
+
+    public RequestInputBar getInputBar() {
+        return inputBar;
+    }
+
+    public HeaderEditor getHeaderEditor() {
+        return headerEditor;
+    }
+
+    public BodyEditor getBodyEditor() {
+        return bodyEditor;
     }
 
 }

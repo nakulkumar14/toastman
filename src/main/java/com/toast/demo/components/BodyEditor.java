@@ -107,4 +107,11 @@ public class BodyEditor extends VBox {
     public String getBodyText() {
         return bodyArea.getText().trim();
     }
+
+    public void setBodyText(String body) {
+        bodyArea.setText(body);
+        lastRawBody = body;
+        prettyPrintToggle.setSelected(true);
+        togglePrettyPrint(true);
+    }
 }
