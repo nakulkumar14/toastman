@@ -14,6 +14,7 @@ public class RequestInputBar extends HBox {
     private final TextField urlField = new TextField();
     private final Button sendButton = new Button("Send");
     private final Button codeButton = new Button("💻");
+    private final Button saveButton = new Button("Save");
 
     public RequestInputBar() {
         super(10);
@@ -23,7 +24,7 @@ public class RequestInputBar extends HBox {
         configureUrlField();
         configureButtons();
 
-        getChildren().addAll(methodComboBox, urlField, sendButton, codeButton);
+        getChildren().addAll(methodComboBox, urlField, sendButton, codeButton, saveButton);
     }
 
     private void configureMethodDropdown() {
@@ -66,5 +67,9 @@ public class RequestInputBar extends HBox {
 
     public Button getCodeButton() {
         return codeButton;
+    }
+
+    public Button getSaveButton() {
+        return saveButton;
     }
 }

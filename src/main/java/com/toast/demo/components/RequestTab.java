@@ -1,14 +1,23 @@
 package com.toast.demo.components;
 
+import com.toast.demo.model.Collection;
+import com.toast.demo.model.SavedRequest;
+import com.toast.demo.service.CollectionsStore;
 import com.toast.demo.service.HttpRequestService;
 import com.toast.demo.ui.RequestInputBar;
 import com.toast.demo.util.CurlGenerator;
 import java.util.Map;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 public class RequestTab extends Tab {
@@ -46,6 +55,7 @@ public class RequestTab extends Tab {
 
         inputBar.onSend(this::executeRequest);
         inputBar.getCodeButton().setOnAction(e -> toggleCurlPane());
+        inputBar.getSaveButton().setOnAction(e -> saveToCollection());
 
         curlPane.setOnClose(() -> curlPane.setVisible(false));
 
@@ -111,6 +121,75 @@ public class RequestTab extends Tab {
         } else {
             curlPane.setVisible(false);
         }
+    }
+
+    private void saveToCollection() {
+//        TextInputDialog dialog = new TextInputDialog("New Request");
+//        dialog.setTitle("Save Request");
+//        dialog.setHeaderText("Enter request name");
+//        dialog.setContentText("Name:");
+//
+//        dialog.showAndWait().ifPresent(name -> {
+//            SavedRequest request = new SavedRequest(
+//                name,
+//                inputBar.getMethod(),
+//                inputBar.getUrl(),
+//                headerEditor.getHeaders(),
+//                bodyEditor.getBodyText()
+//            );
+//
+//            Collection defaultCollection = CollectionsStore.getInstance().getCollections().get(0);
+//            defaultCollection.addRequest(request);
+//
+//            System.out.println("Saved request: " + name);
+//        });
+
+        Dialog<SavedRequest> dialog = new Dialog<>();
+        dialog.setTitle("Save Request");
+
+        Label nameLabel = new Label("Request name:");
+        TextField nameField = new TextField();
+
+        Label collectionLabel = new Label("Collection:");
+        ComboBox<String> collectionBox = new ComboBox<>();
+        collectionBox.getItems().addAll(CollectionsStore.getInstance()
+            .getCollections().stream()
+            .map(Collection::getName)
+            .toList());
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.add(nameLabel, 0, 0);
+        grid.add(nameField, 1, 0);
+        grid.add(collectionLabel, 0, 1);
+        grid.add(collectionBox, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.setResultConverter(button -> {
+            if (button == ButtonType.OK) {
+                String reqName = nameField.getText();
+                String collection = collectionBox.getValue();
+
+                if (reqName != null && !reqName.isBlank() && collection != null) {
+                    return new SavedRequest(
+                        reqName,
+                        inputBar.getMethod(),
+                        inputBar.getUrl(),
+                        headerEditor.getHeaders(),
+                        bodyEditor.getBodyText()
+                    );
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(savedRequest -> {
+            String collectionName = collectionBox.getValue();
+            CollectionsStore.getInstance().addRequestToCollection(collectionName, savedRequest);
+        });
     }
 
 }

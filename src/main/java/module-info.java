@@ -8,4 +8,5 @@ module com.toast.demo {
 
     opens com.toast.demo to javafx.fxml;
     exports com.toast.demo;
+    exports com.toast.demo.model;
 }

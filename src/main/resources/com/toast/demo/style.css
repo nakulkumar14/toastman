@@ -18,3 +18,38 @@
 .html-text {
   -fx-fill: #24292e;
 }
+
+.sidebar {
+  /*-fx-background-color: white;*/
+  -fx-alignment: top-center;
+}
+
+.sidebar-button {
+  -fx-background-color: transparent;
+  -fx-font-size: 9px;
+  -fx-cursor: hand;
+  -fx-min-width: 60px;
+  -fx-min-height: 40px;
+}
+
+.sidebar-button:hover {
+  -fx-background-color: #bdbdbd;
+}
+
+/* Collections View */
+.collections-view {
+  -fx-background-color: #a1a1a1;
+}
+
+.collections-title {
+  -fx-font-size: 12
+  px;
+  -fx-font-weight: bold;
+  -fx-text-fill: white;
+}
+
+.list-view {
+  -fx-control-inner-background: white;
+  -fx-cell-hover-color: #989898;
+  -fx-text-fill: white;
+}
