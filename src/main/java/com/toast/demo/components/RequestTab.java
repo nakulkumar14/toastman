@@ -32,6 +32,8 @@ public class RequestTab extends Tab {
     private final CurlPane curlPane = new CurlPane();
     private final SplitPane splitPane = new SplitPane();
 
+    private String savedRequestId;
+
 
     public RequestTab(String title) {
         setText(title);
@@ -183,6 +185,14 @@ public class RequestTab extends Tab {
 
     public BodyEditor getBodyEditor() {
         return bodyEditor;
+    }
+
+    public String getSavedRequestId() {
+        return savedRequestId;
+    }
+
+    public void setSavedRequestId(String id) {
+        this.savedRequestId = id;
     }
 
 }

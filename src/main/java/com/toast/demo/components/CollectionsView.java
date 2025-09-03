@@ -6,6 +6,7 @@ import com.toast.demo.model.SavedRequest;
 import com.toast.demo.service.CollectionsStore;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeCell;
@@ -107,14 +108,26 @@ public class CollectionsView extends BorderPane {
     }
 
     private void openRequestInNewTab(SavedRequest req) {
+        // 1. Check if already open
+        for (Tab existingTab : tabPane.getTabs()) {
+            if (existingTab instanceof RequestTab rt) {
+                if (req.getId().equals(rt.getSavedRequestId())) {
+                    tabPane.getSelectionModel().select(existingTab);
+                    return; // already open, just focus it
+                }
+            }
+        }
+
+        // 2. Create new tab
         RequestTab tab = new RequestTab(req.getName());
+        tab.setSavedRequestId(req.getId()); // link request to tab
 
         // pre-fill values
         tab.getInputBar().setUrl(req.getUrl());
         tab.getInputBar().setMethod(req.getMethod());
         tab.getHeaderEditor().setHeaders(req.getHeaders());
         tab.getBodyEditor().setBodyText(req.getBody());
-        
+
         tabPane.getTabs().add(tabPane.getTabs().size() - 1, tab); // before the + tab
         tabPane.getSelectionModel().select(tab);
     }
