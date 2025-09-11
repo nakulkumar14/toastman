@@ -1,14 +1,13 @@
 [ {
   "name" : "Default",
   "requests" : [ {
-    "id" : "4e53fbcf-1570-457f-8533-19e5e8abf5b1",
-    "name" : "Imported Request",
-    "method" : "POST",
-    "url" : "https://boomi.vsignon.com/acs/token",
+    "id" : "c0d7a450-5ecc-4f02-ac0d-746cc051b8e7",
+    "name" : "w2",
+    "method" : "GET",
+    "url" : "http://www.microsoft.com",
     "headers" : {
-      "Content-Type" : "application/x-www-form-urlencoded",
-      "Cookie" : "AWSALB=MTzFhQOFq+4Y2qQsMNZ/PwwEDlWcW2WNjWZBzZ5EyPBiDriycEn+f5rt3tC9xzjyFcQJGaZzrWY51Tl+UQopWZiLrErjsDIUS0pk10JLJfdTa7VZyzyC2DFF92jQ; AWSALBCORS=MTzFhQOFq+4Y2qQsMNZ/PwwEDlWcW2WNjWZBzZ5EyPBiDriycEn+f5rt3tC9xzjyFcQJGaZzrWY51Tl+UQopWZiLrErjsDIUS0pk10JLJfdTa7VZyzyC2DFF92jQ"
+      "Content-Type" : "application/json"
     },
-    "body" : "grant_type=password&client_id=password-grant-client&client_secret=B59iuwNf6MTanrdZw3q0OImmpJwW0Clx&scope=use profile email admin&username=devadmin&password=Ssn123456"
+    "body" : ""
   } ]
 } ]

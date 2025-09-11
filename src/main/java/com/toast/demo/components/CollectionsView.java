@@ -15,6 +15,7 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 
 public class CollectionsView extends BorderPane {
@@ -65,8 +66,17 @@ public class CollectionsView extends BorderPane {
         // delete collection
         deleteButton.setOnAction(e -> {
             TreeItem<Object> selected = treeView.getSelectionModel().getSelectedItem();
-            if (selected != null && selected.getValue() instanceof Collection collection) {
-                store.removeCollectionByName(collection.getName());
+            if (selected != null) {
+                if (selected.getValue() instanceof Collection collection) {
+                    store.removeCollectionByName(collection.getName());
+                } else if (selected.getValue() instanceof SavedRequest req) {
+                    // Get the parent TreeItem (the Collection)
+                    TreeItem<Object> parent = selected.getParent();
+                    if (parent != null && parent.getValue() instanceof Collection collection) {
+                        // Remove the request from the collection
+                        store.removeRequestFromCollection(collection.getName(), req);
+                    }
+                }
                 refresh();
             }
         });
@@ -99,6 +109,21 @@ public class CollectionsView extends BorderPane {
                 TreeItem<Object> selected = treeView.getSelectionModel().getSelectedItem();
                 if (selected != null && selected.getValue() instanceof SavedRequest req) {
                     openRequestInNewTab(req);
+                }
+            }
+        });
+
+        treeView.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.DELETE) {
+                TreeItem<Object> selected = treeView.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    if (selected.getValue() instanceof SavedRequest req) {
+                        TreeItem<Object> parent = selected.getParent();
+                        if (parent != null && parent.getValue() instanceof Collection collection) {
+                            store.removeRequestFromCollection(collection.getName(), req);
+                            refresh();
+                        }
+                    }
                 }
             }
         });

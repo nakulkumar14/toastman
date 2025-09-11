@@ -102,4 +102,14 @@ public class CollectionsStore {
             .ifPresent(c -> c.getRequests().add(request));
         saveAndNotify();
     }
+
+    public void removeRequestFromCollection(String collectionName, SavedRequest request) {
+        collections.stream()
+            .filter(c -> c.getName().equals(collectionName))
+            .findFirst()
+            .ifPresent(c -> {
+                c.getRequests().removeIf(req -> req.getId().equals(request.getId()));
+                notifyListeners();
+            });
+    }
 }
