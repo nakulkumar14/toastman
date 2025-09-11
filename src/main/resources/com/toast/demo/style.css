@@ -53,3 +53,47 @@
   -fx-cell-hover-color: #989898;
   -fx-text-fill: white;
 }
+
+.styled-text-area {
+  -fx-font-family: 'monospace';
+}
+
+/* Base text color */
+.plain-text {
+  -fx-fill: #333;
+}
+
+/* cURL command */
+.curl-keyword {
+  -fx-fill: #3994df; /* A common blue for keywords */
+}
+
+/* HTTP method */
+.method-keyword {
+  -fx-fill: #93d372; /* A green color */
+}
+
+/* Headers and URL flags */
+.header-keyword {
+  -fx-fill: #cc61c4; /* A magenta/purple color */
+}
+
+/* Data flags */
+.data-keyword {
+  -fx-fill: #c8c859; /* A yellowish color */
+}
+
+/* URL string */
+.url-text {
+  -fx-fill: #ce9178; /* An orange/brown color for strings */
+}
+
+/* Quotes */
+.quote {
+  -fx-fill: #ce9178;
+}
+
+/* Highlighted text */
+.styled-text-area .selection {
+  -fx-fill: #6298cf;
+}
