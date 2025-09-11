@@ -1,8 +1,10 @@
 package com.toast.demo;
 
 import com.toast.demo.components.CollectionsView;
+import com.toast.demo.components.HistoryView;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -54,22 +56,56 @@ public class HttpRequestUI extends Application {
         collectionsView.setVisible(false);
         collectionsView.setManaged(false); // ensures layout doesn’t reserve space
 
+        HistoryView historyView = new HistoryView(tabPane);
+        historyView.setVisible(false);
+        historyView.setManaged(false);
+
         // Collections button
         Button collectionsBtn = new Button("Collections"); // icon placeholder
         collectionsBtn.getStyleClass().add("sidebar-button");
         collectionsBtn.setOnAction(e -> {
             boolean showing = collectionsView.isVisible();
-            collectionsView.setVisible(!showing);
-            collectionsView.setManaged(!showing);
-            if (!leftContainer.getChildren().contains(collectionsView)) {
-                leftContainer.getChildren().add(collectionsView);
+            if (showing) {
+                collectionsView.setVisible(false);
+                collectionsView.setManaged(false);
+            } else {
+                showSidebarView(collectionsView, leftContainer, collectionsView, historyView);
             }
         });
 
-        sidebar.getChildren().addAll(collectionsBtn);
+        Button historyBtn = new Button("History"); // icon placeholder
+        historyBtn.getStyleClass().add("sidebar-button");
+        historyBtn.setOnAction(e -> {
+            boolean alreadyVisible = historyView.isVisible();
+            if (alreadyVisible) {
+                historyView.setVisible(false);
+                historyView.setManaged(false);
+            } else {
+                showSidebarView(historyView, leftContainer, collectionsView, historyView);
+                historyView.refresh(); // reload items
+            }
+        });
+
+        sidebar.getChildren().addAll(collectionsBtn, historyBtn);
 
         return sidebar;
     }
+
+    private void showSidebarView(Node viewToShow, HBox leftContainer, Node... allViews) {
+        for (Node view : allViews) {
+            if (view == viewToShow) {
+                if (!leftContainer.getChildren().contains(view)) {
+                    leftContainer.getChildren().add(view);
+                }
+                view.setVisible(true);
+                view.setManaged(true);
+            } else {
+                view.setVisible(false);
+                view.setManaged(false);
+            }
+        }
+    }
+
 
     public static void main(String[] args) {
         launch(args);

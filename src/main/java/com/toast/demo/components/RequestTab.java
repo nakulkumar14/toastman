@@ -4,6 +4,7 @@ import com.toast.demo.model.Collection;
 import com.toast.demo.model.SavedRequest;
 import com.toast.demo.service.CollectionsStore;
 import com.toast.demo.service.HttpRequestService;
+import com.toast.demo.service.RequestHistory;
 import com.toast.demo.ui.RequestInputBar;
 import com.toast.demo.util.CurlGenerator;
 import java.util.Map;
@@ -103,6 +104,8 @@ public class RequestTab extends Tab {
         httpRequestService.sendRequest(method, url, headers, body)
             .thenAccept(response -> Platform.runLater(() -> {
 
+                saveToHistory();
+
                 responseSection.setResponseBody(response.getBody(), response.getContentType());
                 responseSection.setStatusCode(response.getStatusCode());
                 responseSection.setResponseHeaders(response.getHeaders());
@@ -116,6 +119,13 @@ public class RequestTab extends Tab {
                 Platform.runLater(() -> responseSection.setResponseBody("Error: " + ex.getMessage(), "text/plain"));
                 return null;
             });
+    }
+
+    private void saveToHistory() {
+        SavedRequest req = new SavedRequest("History: " + inputBar.getUrlField().getText(), inputBar.getMethod(),
+            inputBar.getUrl(), headerEditor.getHeaders(),
+            bodyEditor.getBodyText(), bodyEditor.getFormBody(), bodyEditor.getBodyType());
+        RequestHistory.getInstance().add(req);
     }
 
     private void toggleCurlPane() {
