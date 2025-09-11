@@ -1,24 +1,22 @@
 [ {
   "name" : "Default",
   "requests" : [ {
-    "id" : "253d33b3-a851-4518-8a54-b47dc56a349d",
-    "name" : "google",
+    "id" : "15795574-a8fc-4542-b8d1-8fe09642a6d3",
+    "name" : "r1",
     "method" : "GET",
-    "url" : "http://google.com",
+    "url" : "https://www.google.com",
     "headers" : {
       "Content-Type" : "application/json"
     },
     "body" : ""
-  } ]
-}, {
-  "name" : "New Collection",
-  "requests" : [ {
-    "id" : "a33c2a92-b8e2-4761-b9fb-3dd25e4364fc",
-    "name" : "a",
+  }, {
+    "id" : "5cb7727e-d650-4984-a444-2dcaebfdb6b5",
+    "name" : "Imported Request",
     "method" : "GET",
-    "url" : "http://google.com",
+    "url" : "https://boomi.vsignon.com/acs/token",
     "headers" : {
-      "Content-Type" : "application/json"
+      "Content-Type" : "application/x-www-form-urlencoded",
+      "Cookie" : "AWSALB=TjAH1/z9yqFTIyCm4Ll/aOb/1iJQ5o9DFJSADdkuLxGVSHH3tMBej0+acpWzXfTwdVuvPdzwMlQLwBkD27jeH+MUHjUxbYmxFQTCJOQQSZpyWr1QyAwskppiN6Cv; AWSALBCORS=TjAH1/z9yqFTIyCm4Ll/aOb/1iJQ5o9DFJSADdkuLxGVSHH3tMBej0+acpWzXfTwdVuvPdzwMlQLwBkD27jeH+MUHjUxbYmxFQTCJOQQSZpyWr1QyAwskppiN6Cv"
     },
     "body" : ""
   } ]

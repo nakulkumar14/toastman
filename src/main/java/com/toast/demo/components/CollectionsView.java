@@ -4,8 +4,10 @@ import com.toast.demo.RequestTabPane;
 import com.toast.demo.model.Collection;
 import com.toast.demo.model.SavedRequest;
 import com.toast.demo.service.CollectionsStore;
+import com.toast.demo.util.CurlParser;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextInputDialog;
@@ -21,6 +23,10 @@ public class CollectionsView extends BorderPane {
     private final CollectionsStore store = CollectionsStore.getInstance();
     private final RequestTabPane tabPane;
 
+    private final Button addButton = new Button("Add");
+    private final Button deleteButton = new Button("Delete");
+    private final Button importButton = new Button("Import cURL");
+
 
     public CollectionsView(RequestTabPane tabPane) {
         this.tabPane = tabPane;
@@ -29,9 +35,7 @@ public class CollectionsView extends BorderPane {
 
         // toolbar
         ToolBar toolBar = new ToolBar();
-        Button addButton = new Button("Add");
-        Button deleteButton = new Button("Delete");
-        toolBar.getItems().addAll(addButton, deleteButton);
+        toolBar.getItems().addAll(addButton, deleteButton, importButton);
 
         setCenter(treeView);
 
@@ -65,6 +69,29 @@ public class CollectionsView extends BorderPane {
                 store.removeCollectionByName(collection.getName());
                 refresh();
             }
+        });
+
+        importButton.setOnAction(e -> {
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Import from cURL");
+            dialog.setHeaderText("Paste your cURL command below:");
+            dialog.getEditor().setPrefWidth(600);
+
+            dialog.showAndWait().ifPresent(curl -> {
+                try {
+                    SavedRequest req = CurlParser.parseCurl(curl);
+
+                    // Save to first collection for now
+                    CollectionsStore.getInstance()
+                        .addRequestToCollection("Default", req);
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Alert alert = new Alert(Alert.AlertType.ERROR,
+                        "Failed to parse cURL:\n" + ex.getMessage());
+                    alert.showAndWait();
+                }
+            });
         });
 
         treeView.setOnMouseClicked(event -> {
