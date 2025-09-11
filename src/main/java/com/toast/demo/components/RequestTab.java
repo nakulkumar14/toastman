@@ -165,13 +165,9 @@ public class RequestTab extends Tab {
                 String collection = collectionBox.getValue();
 
                 if (reqName != null && !reqName.isBlank() && collection != null) {
-                    return new SavedRequest(
-                        reqName,
-                        inputBar.getMethod(),
-                        inputBar.getUrl(),
-                        headerEditor.getHeaders(),
-                        bodyEditor.getBodyText()
-                    );
+                    return new SavedRequest(reqName, inputBar.getMethod(),
+                        inputBar.getUrl(), headerEditor.getHeaders(), bodyEditor.getBodyText(),
+                        bodyEditor.getFormBody(), bodyEditor.getBodyType());
                 }
             }
             return null;

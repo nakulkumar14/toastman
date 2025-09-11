@@ -14,7 +14,7 @@ public class CurlParser {
 
     private static final Logger log = LoggerFactory.getLogger(CurlParser.class);
 
-//    private static final Pattern PATTERN = Pattern.compile("(--\\w+|-\\w|'[^']+'|\"[^\"]+\"|\\S+)");
+    //    private static final Pattern PATTERN = Pattern.compile("(--\\w+|-\\w|'[^']+'|\"[^\"]+\"|\\S+)");
     private static final Pattern PATTERN = Pattern.compile("(--[A-Za-z0-9-]+|-\\w|'[^']+'|\"[^\"]+\"|\\S+)");
 
     public static SavedRequest parseCurl(String rawCurl) {
@@ -57,19 +57,28 @@ public class CurlParser {
         }
 
         String body;
+        String bodyType = "Plain Text";
         if (!formData.isEmpty()) {
             body = encodeFormData(formData);
             headers.putIfAbsent("Content-Type", "application/x-www-form-urlencoded");
             method = "POST";
+            bodyType = "Form Data";
+
         } else {
             body = rawBody.toString();
-            method = "POST";
+            if (!body.isEmpty()) {
+                bodyType = "JSON"; // default guess, can refine later
+                if (method.equalsIgnoreCase("GET")) {
+                    method = "POST";
+                }
+            }
         }
 
         log.info("Parsed request: method={}, url={}, headers={}, body={}",
             method, url, headers, body);
 
-        return new SavedRequest("Imported Request", method, url, headers, body.toString());
+        return new SavedRequest("Imported Request", method, url, headers, body, formData, bodyType);
+
     }
 
     /**

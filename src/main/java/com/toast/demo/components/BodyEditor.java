@@ -1,11 +1,15 @@
 package com.toast.demo.components;
 
 import com.toast.demo.util.JsonFormatter;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.AbstractMap;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -19,6 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -32,6 +37,7 @@ public class BodyEditor extends VBox {
     // form-data UI
     private final TableView<Map.Entry<String, String>> formTable = new TableView<>();
     private final ObservableList<Entry<String, String>> formItems = FXCollections.observableArrayList();
+    private final Button addRowBtn = new Button("+");
 
     private String lastRawBody = "";
 
@@ -54,20 +60,8 @@ public class BodyEditor extends VBox {
         errorLabel.setStyle("-fx-text-fill: red;");
         errorLabel.setVisible(false);
 
-        // Table for Form Data
-        TableColumn<Map.Entry<String, String>, String> keyCol = new TableColumn<>("Key");
-        keyCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getKey()));
+        setupFormTable();
 
-        TableColumn<Map.Entry<String, String>, String> valueCol = new TableColumn<>("Value");
-        valueCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getValue()));
-
-        formTable.getColumns().addAll(keyCol, valueCol);
-        formTable.setItems(formItems);
-        formTable.setEditable(true);
-        formTable.setVisible(false);
-
-        // add button for form rows
-        Button addRowBtn = new Button("+");
         addRowBtn.setOnAction(e -> formItems.add(Map.entry("key", "value")));
         addRowBtn.setVisible(false);
 
@@ -76,15 +70,47 @@ public class BodyEditor extends VBox {
 
         this.getChildren().addAll(topControls, bodyArea, formTable, errorLabel);
 
-        // toggle visibility based on type
-        bodyTypeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
-            boolean isForm = "Form Data".equalsIgnoreCase(newVal);
-            formTable.setVisible(isForm);
-            addRowBtn.setVisible(isForm);
-            bodyArea.setVisible(!isForm);
-            validateJsonIfNeeded(bodyArea.getText());
-        });
+        bodyTypeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> switchTo(newVal));
+
     }
+
+    private void setupFormTable() {
+        TableColumn<Map.Entry<String, String>, String> keyCol = new TableColumn<>("Key");
+        keyCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getKey()));
+        keyCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        keyCol.setOnEditCommit(e -> {
+            Map.Entry<String, String> entry = e.getRowValue();
+            int idx = formItems.indexOf(entry);
+            formItems.set(idx, new AbstractMap.SimpleEntry<>(e.getNewValue(), entry.getValue()));
+        });
+
+        TableColumn<Map.Entry<String, String>, String> valueCol = new TableColumn<>("Value");
+        valueCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getValue()));
+        valueCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        valueCol.setOnEditCommit(e -> {
+            Map.Entry<String, String> entry = e.getRowValue();
+            int idx = formItems.indexOf(entry);
+            formItems.set(idx, new AbstractMap.SimpleEntry<>(entry.getKey(), e.getNewValue()));
+
+        });
+
+        formTable.getColumns().addAll(keyCol, valueCol);
+        formTable.setItems(formItems);
+        formTable.setEditable(true);
+    }
+
+    private void switchTo(String type) {
+        this.getChildren().removeIf(node -> node == bodyArea || node == formTable);
+
+        if ("Form Data".equalsIgnoreCase(type)) {
+            this.getChildren().add(1, formTable);
+            addRowBtn.setVisible(true);
+        } else {
+            this.getChildren().add(1, bodyArea);
+            addRowBtn.setVisible(false);
+        }
+    }
+
 
     private void setupListeners() {
         prettyPrintToggle.selectedProperty()
@@ -152,27 +178,50 @@ public class BodyEditor extends VBox {
 
     public String getBodyText() {
         if ("Form Data".equalsIgnoreCase(getBodyType())) {
-            StringBuilder sb = new StringBuilder();
-            for (Map.Entry<String, String> entry : formItems) {
-                if (sb.length() > 0) {
-                    sb.append("&");
-                }
-                sb.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8));
-                sb.append("=");
-                sb.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8));
-            }
-            return sb.toString();
+            return formItems.stream()
+                .map(entry -> URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8) +
+                    "=" +
+                    URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8))
+                .collect(Collectors.joining("&"));
         }
         return bodyArea.getText().trim();
     }
 
     public void setBodyText(String body) {
-        if ("Form Data".equalsIgnoreCase(getBodyType())) {
-            // TODO: parse if needed
+        if (body == null || body.isBlank()) {
+            bodyArea.clear();
+            formItems.clear();
             return;
         }
+
+        if ("Form Data".equalsIgnoreCase(getBodyType())
+            || body.contains("=") && body.contains("&")) {
+            try {
+                Map<String, String> parsed = Arrays.stream(body.split("&"))
+                    .map(pair -> pair.split("=", 2))
+                    .filter(arr -> arr.length == 2)
+                    .collect(Collectors.toMap(
+                        arr -> URLDecoder.decode(arr[0], StandardCharsets.UTF_8),
+                        arr -> URLDecoder.decode(arr[1], StandardCharsets.UTF_8),
+                        (a, b) -> b,
+                        LinkedHashMap::new
+                    ));
+
+                bodyTypeComboBox.setValue("Form Data"); // switch automatically
+                setFormBody(parsed);
+                return;
+            } catch (Exception e) {
+                // fallback to plain text if parsing fails
+                bodyTypeComboBox.setValue("Plain Text");
+                bodyArea.setText(body);
+                return;
+            }
+        }
+
+        // Fallback for non-form-data
         bodyArea.setText(body);
         lastRawBody = body;
+
         if ("JSON".equalsIgnoreCase(getBodyType())) {
             prettyPrintToggle.setSelected(true);
             togglePrettyPrint(true);
@@ -189,5 +238,7 @@ public class BodyEditor extends VBox {
 
     public void setFormBody(Map<String, String> formData) {
         formItems.setAll(formData.entrySet());
+        bodyTypeComboBox.setValue("Form Data");
+        switchTo("Form Data");
     }
 }
