@@ -14,13 +14,10 @@ public class CurlParser {
 
     private static final Logger log = LoggerFactory.getLogger(CurlParser.class);
 
-    //    private static final Pattern PATTERN = Pattern.compile("(--\\w+|-\\w|'[^']+'|\"[^\"]+\"|\\S+)");
     private static final Pattern PATTERN = Pattern.compile("(--[A-Za-z0-9-]+|-\\w|'[^']+'|\"[^\"]+\"|\\S+)");
 
     public static SavedRequest parseCurl(String rawCurl) {
-//        log.debug("Raw cURL input: {}", rawCurl);
         String normalizedCurl = normalizeCurl(rawCurl);
-//        log.info("Normalized cURL: {}", normalizedCurl);
 
         String method = "GET";
         String url = null;
