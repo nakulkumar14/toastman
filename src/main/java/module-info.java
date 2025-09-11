@@ -5,6 +5,8 @@ module com.toast.demo {
 
     requires com.fasterxml.jackson.databind;
     requires org.fxmisc.richtext;
+    requires java.logging;
+    requires org.slf4j;
 
     opens com.toast.demo to javafx.fxml;
     exports com.toast.demo;

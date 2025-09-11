@@ -1,23 +1,32 @@
 package com.toast.demo.util;
 
 import com.toast.demo.model.SavedRequest;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CurlParser {
 
-    private static final Pattern PATTERN = Pattern.compile("(--\\w+|-\\w|'[^']+'|\"[^\"]+\"|\\S+)");
+    private static final Logger log = LoggerFactory.getLogger(CurlParser.class);
+
+//    private static final Pattern PATTERN = Pattern.compile("(--\\w+|-\\w|'[^']+'|\"[^\"]+\"|\\S+)");
+    private static final Pattern PATTERN = Pattern.compile("(--[A-Za-z0-9-]+|-\\w|'[^']+'|\"[^\"]+\"|\\S+)");
 
     public static SavedRequest parseCurl(String rawCurl) {
+//        log.debug("Raw cURL input: {}", rawCurl);
         String normalizedCurl = normalizeCurl(rawCurl);
+//        log.info("Normalized cURL: {}", normalizedCurl);
 
         String method = "GET";
         String url = null;
         Map<String, String> headers = new LinkedHashMap<>();
-        StringBuilder body = new StringBuilder();
+        Map<String, String> formData = new LinkedHashMap<>();
+        StringBuilder rawBody = new StringBuilder();
 
         // Regex to capture flags, quoted strings, and other non-space tokens
         Matcher matcher = PATTERN.matcher(normalizedCurl);
@@ -25,6 +34,8 @@ public class CurlParser {
 
         while (matcher.find()) {
             String token = matcher.group(1);
+
+            log.debug("Token: {}, lastFlag={}", token, lastFlag);
 
             if (token.equalsIgnoreCase("curl")) {
                 continue;
@@ -34,7 +45,7 @@ public class CurlParser {
                 lastFlag = token;
             } else {
                 if (lastFlag != null) {
-                    processToken(lastFlag, token, headers, body);
+                    method = processToken(lastFlag, token, headers, formData, rawBody, method);
                     lastFlag = null; // Reset the flag after processing its value
                 }
 
@@ -45,10 +56,18 @@ public class CurlParser {
             }
         }
 
-        // Apply a POST method if a body exists
-        if (!body.toString().isEmpty() && method.equalsIgnoreCase("GET")) {
+        String body;
+        if (!formData.isEmpty()) {
+            body = encodeFormData(formData);
+            headers.putIfAbsent("Content-Type", "application/x-www-form-urlencoded");
+            method = "POST";
+        } else {
+            body = rawBody.toString();
             method = "POST";
         }
+
+        log.info("Parsed request: method={}, url={}, headers={}, body={}",
+            method, url, headers, body);
 
         return new SavedRequest("Imported Request", method, url, headers, body.toString());
     }
@@ -56,17 +75,37 @@ public class CurlParser {
     /**
      * Helper method to process a token based on the last identified flag.
      */
-    private static void processToken(String flag, String value, Map<String, String> headers, StringBuilder body) {
+    private static String processToken(String flag, String value, Map<String, String> headers,
+        Map<String, String> formData, StringBuilder rawBody, String currentMethod) {
+
+        log.debug("Processing flag={}, value={}, currentMethod={}", flag, value, currentMethod);
+
         String strippedValue = stripQuotes(value);
-        if (flag.equalsIgnoreCase("-X") || flag.equalsIgnoreCase("--request")) {
-            // Method is handled by the main loop
-        } else if (flag.equalsIgnoreCase("-H") || flag.equalsIgnoreCase("--header")) {
-            parseHeader(strippedValue, headers);
-        } else if (flag.equalsIgnoreCase("-d") || flag.equalsIgnoreCase("--data") || flag.equalsIgnoreCase("--data-raw")) {
-            body.append(strippedValue);
-        } else if (flag.equals("--form")) {
-            body.append(strippedValue).append("&");
+
+        switch (flag) {
+            case "-X":
+            case "--request":
+                return strippedValue.toUpperCase();
+
+            case "-H":
+            case "--header":
+                parseHeader(strippedValue, headers);
+                break;
+
+            case "-d":
+            case "--data":
+            case "--data-raw":
+                rawBody.append(strippedValue);
+                // Having raw body → implies POST
+                return "POST";
+
+            case "--form":
+            case "--data-urlencode":
+                parseFormData(strippedValue, formData);
+                // Having form data → implies POST
+                return "POST";
         }
+        return currentMethod;
     }
 
     /**
@@ -77,6 +116,26 @@ public class CurlParser {
         if (parts.length == 2) {
             headers.put(parts[0].trim(), parts[1].trim());
         }
+    }
+
+    private static void parseFormData(String data, Map<String, String> formData) {
+        String[] parts = data.split("=", 2);
+        if (parts.length == 2) {
+            String key = URLDecoder.decode(parts[0].trim(), StandardCharsets.UTF_8);
+            String value = URLDecoder.decode(stripQuotes(parts[1].trim()), StandardCharsets.UTF_8);
+            formData.put(key, value);
+        }
+    }
+
+    private static String encodeFormData(Map<String, String> formData) {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, String> entry : formData.entrySet()) {
+            if (sb.length() > 0) {
+                sb.append("&");
+            }
+            sb.append(entry.getKey()).append("=").append(entry.getValue());
+        }
+        return sb.toString();
     }
 
     private static String stripQuotes(String s) {

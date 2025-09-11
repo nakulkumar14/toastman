@@ -1,23 +1,14 @@
 [ {
   "name" : "Default",
   "requests" : [ {
-    "id" : "15795574-a8fc-4542-b8d1-8fe09642a6d3",
-    "name" : "r1",
-    "method" : "GET",
-    "url" : "https://www.google.com",
-    "headers" : {
-      "Content-Type" : "application/json"
-    },
-    "body" : ""
-  }, {
-    "id" : "5cb7727e-d650-4984-a444-2dcaebfdb6b5",
+    "id" : "c1167f80-1c78-4672-a19f-bb36a8ed7dc3",
     "name" : "Imported Request",
-    "method" : "GET",
+    "method" : "POST",
     "url" : "https://boomi.vsignon.com/acs/token",
     "headers" : {
       "Content-Type" : "application/x-www-form-urlencoded",
-      "Cookie" : "AWSALB=TjAH1/z9yqFTIyCm4Ll/aOb/1iJQ5o9DFJSADdkuLxGVSHH3tMBej0+acpWzXfTwdVuvPdzwMlQLwBkD27jeH+MUHjUxbYmxFQTCJOQQSZpyWr1QyAwskppiN6Cv; AWSALBCORS=TjAH1/z9yqFTIyCm4Ll/aOb/1iJQ5o9DFJSADdkuLxGVSHH3tMBej0+acpWzXfTwdVuvPdzwMlQLwBkD27jeH+MUHjUxbYmxFQTCJOQQSZpyWr1QyAwskppiN6Cv"
+      "Cookie" : "AWSALB=CX9WLfYG9r6GipzPfqVYjgDZ5pOxkcWNzB7mxyvfH5yr7PmQidqDuMLb+oVRf8gC4w3UGHE4vpe9xeNfM+Up25RTGbKvp4VW9sxhcYhE4bjQhK4zgEf+IM3xTwUe; AWSALBCORS=CX9WLfYG9r6GipzPfqVYjgDZ5pOxkcWNzB7mxyvfH5yr7PmQidqDuMLb+oVRf8gC4w3UGHE4vpe9xeNfM+Up25RTGbKvp4VW9sxhcYhE4bjQhK4zgEf+IM3xTwUe"
     },
-    "body" : ""
+    "body" : "grant_type=password&client_id=password-grant-client&client_secret=B59iuwNf6MTanrdZw3q0OImmpJwW0Clx&scope=use profile email admin&username=devadmin&password=Ssn123456"
   } ]
 } ]

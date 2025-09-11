@@ -88,7 +88,15 @@ public class RequestTab extends Tab {
         String method = inputBar.getMethod();
         String url = inputBar.getUrl();
         Map<String, String> headers = headerEditor.getHeaders();
-        String body = bodyEditor.getBodyText();
+
+        String body = null;
+        if ("x-www-form-urlencoded".equals(bodyEditor.getBodyType())) {
+            headers.put("Content-Type", "application/x-www-form-urlencoded");
+            body = bodyEditor.getBodyText();
+        } else {
+            body = bodyEditor.getBodyText();
+        }
+        String finalBody = body; // for use in lambda
 
         responseSection.setResponseBody("Sending " + method + " request to: " + url, "");
 
@@ -100,7 +108,7 @@ public class RequestTab extends Tab {
                 responseSection.setResponseHeaders(response.getHeaders());
 
                 if (curlPane.isVisible()) {
-                    String updatedCurl = CurlGenerator.generateCurl(method, url, headers, body);
+                    String updatedCurl = CurlGenerator.generateCurl(method, url, headers, finalBody);
                     curlPane.setCurlCommand(updatedCurl);
                 }
             }))
