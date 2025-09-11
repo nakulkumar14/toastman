@@ -4,6 +4,9 @@ import com.toast.demo.util.HtmlHighlighter;
 import com.toast.demo.util.JsonFormatter;
 import com.toast.demo.util.JsonHighlighter;
 import com.toast.demo.util.StatusUtils;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Map;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -17,6 +20,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import org.fxmisc.richtext.StyleClassedTextArea;
 
 public class ResponseSection extends VBox {
@@ -31,12 +35,15 @@ public class ResponseSection extends VBox {
     private final VBox headersBox = new VBox(5);
     private final TabPane responseTabs = new TabPane();
 
+    private final Button saveResponseButton = new Button("Save Response");
+
     public ResponseSection() {
         setSpacing(10);
         setPadding(new Insets(10));
 
         setupUI();
         setupCopyAction();
+        setupSaveResponseAction();
 
         copyButton.setTooltip(new Tooltip("Copy to clipboard"));
     }
@@ -64,8 +71,10 @@ public class ResponseSection extends VBox {
         responseTabs.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         copyButton.setTooltip(new Tooltip("Copy response body to clipboard"));
+
+        saveResponseButton.setTooltip(new Tooltip("Save response to file"));
         // Top bar
-        HBox responseTopBar = new HBox(10, new Label("Response:"), copyButton);
+        HBox responseTopBar = new HBox(10, new Label("Response:"), copyButton, saveResponseButton);
         statusCodeLabel.setStyle("-fx-font-weight: bold;");
 
         getChildren().addAll(responseTopBar, responseTabs, statusCodeLabel);
@@ -115,6 +124,44 @@ public class ResponseSection extends VBox {
                 giveCopyFeedback();
             }
         });
+    }
+
+    private void setupSaveResponseAction() {
+        saveResponseButton.setOnAction(e -> {
+            // Create a new FileChooser
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Response");
+
+            // Set the initial directory (optional)
+            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+
+            // Set file extension filters to suggest file types
+            FileChooser.ExtensionFilter jsonFilter = new FileChooser.ExtensionFilter("JSON files (*.json)", "*.json");
+            FileChooser.ExtensionFilter textFilter = new FileChooser.ExtensionFilter("Text files (*.txt)", "*.txt");
+            fileChooser.getExtensionFilters().addAll(jsonFilter, textFilter);
+
+            // Show the save dialog and get the selected file
+            File file = fileChooser.showSaveDialog(saveResponseButton.getScene().getWindow());
+
+            if (file != null) {
+                // Get the content to be saved (assuming you have a method to retrieve it)
+                String content = responseArea.getText(); // You need to implement this method
+
+                // Save the content to the selected file
+                saveFile(content, file);
+            }
+        });
+    }
+
+    private void saveFile(String content, File file) {
+        try (FileWriter fileWriter = new FileWriter(file)) {
+            fileWriter.write(content);
+            // Display a success message or other feedback
+            System.out.println("File saved successfully to: " + file.getAbsolutePath());
+        } catch (IOException ex) {
+            // Handle the exception, e.g., show an error dialog
+            System.err.println("Error saving file: " + ex.getMessage());
+        }
     }
 
     private void giveCopyFeedback() {
