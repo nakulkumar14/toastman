@@ -1,12 +1,14 @@
 package com.toast.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class SavedRequest {
 
-    private final String id;
+    private String id;
     private String name;
     private String method;
     private String url;
@@ -18,6 +20,12 @@ public class SavedRequest {
     public SavedRequest() {
         this.id = UUID.randomUUID().toString();
     } // needed for Jackson
+
+    // Constructor for Jackson to use during deserialization
+    @JsonCreator
+    public SavedRequest(@JsonProperty("id") String id) {
+        this.id = id;
+    }
 
     public SavedRequest(String name, String method, String url,
         Map<String, String> headers,

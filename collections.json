@@ -1,4 +1,137 @@
 [ {
   "name" : "Default",
   "requests" : [ ]
+}, {
+  "name" : "cds",
+  "requests" : [ {
+    "id" : "907dd366-8d22-4c4a-9e8a-70fc86d55f61",
+    "name" : "https://himalayan-test.vsignon.com/cds/items/acs/config/global/queryParameterBlockerFlag?allowDefault=true",
+    "method" : "GET",
+    "url" : "https://test-acs.{{baseUrl}}/cds/items/acs/config/global/enableAccessToReadOnlyDatabase",
+    "headers" : {
+      "Accept" : "application/vnd.vmware.vidm.cds.global.item+json",
+      "Authorization" : "HZN {{system-token}}",
+      "Cookie" : "AWSALB=inZ+lsgnk49Y6YrTDfU/yel1OVQdnmSeoFvHfaleJJt0Edm18WRYqptBLdnMIkOzxwDFjnp/MUx9yXjSp5EiJUGzUqtNkffk5/zrEnex6RQWEB/E7rNekYOQmv5d; AWSALBCORS=inZ+lsgnk49Y6YrTDfU/yel1OVQdnmSeoFvHfaleJJt0Edm18WRYqptBLdnMIkOzxwDFjnp/MUx9yXjSp5EiJUGzUqtNkffk5/zrEnex6RQWEB/E7rNekYOQmv5d"
+    },
+    "body" : "{\n    \"service\": \"acs\",\n    \"name\": \"inputValidationFeatureFlag\",\n    \"value\": \"true\"\n}"
+  }, {
+    "id" : "070c7977-10f0-4748-bb31-957930793a4a",
+    "name" : "https://himalayan-test.vsignon.com/cds/items/acs/config/global",
+    "method" : "POST",
+    "url" : "https://test-acs.{{baseUrl}}/cds/items/acs/config/global",
+    "headers" : {
+      "accept" : "application/vnd.vmware.vidm.cds.global.item+json",
+      "Content-Type" : "application/vnd.vmware.vidm.cds.global.item+json",
+      "Authorization" : "HZN {{system-token}}"
+    },
+    "body" : "{\n    \"service\": \"acs\",\n    \"name\": \"enableAccessToReadOnlyDatabase\",\n    \"value\": \"true\"\n}"
+  }, {
+    "id" : "c9c75b07-ca12-458c-9cf1-f96cef31dd28",
+    "name" : "https://himalayan-test.vsignon.com/cds/items/vidm/config/tenant/HIMALAYAN-TEST/oAuth2DeleteEventsEnabled?allowDefault=true",
+    "method" : "GET",
+    "url" : "https://himalayan-test.vsignon.com/cds/items/vidm/config/tenant/HIMALAYAN-TEST/oAuth2DeleteEventsEnabled?allowDefault=true",
+    "headers" : {
+      "Accept" : "application/vnd.vmware.vidm.cds.tenant.item+json",
+      "Authorization" : "HZN eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE2NjY5NDc5MzYsImlhdCI6MTY2NjkzNzEzNiwic3ViIjoiMzEyYmUyMmYtNzlkMC00NDAzLTk1NGYtNzU0MjQwZDAwOTQ5IiwiYXV0aF90aW1lIjoxNjY2OTM3MTM2LCJzY3AiOiJvcGVuaWQgYWRtaW4gc3lzdGVtIiwiYXVkIjoiaHR0cHM6Ly9od3MudnNpZ25vbi5jb20vU0FBUy9hdXRoL29hdXRodG9rZW4iLCJ1c2VyX2lkIjoiMTY4Mzg4NiIsImVtbCI6Ik9BdXRoQ2xpZW50X3NjaW1fdGVzdF9jbGllbnRfYWNzMkBub3JlcGx5LmNvbSIsImF6cCI6InNjaW1fdGVzdF9jbGllbnRfYWNzMiIsImlzcyI6Imh0dHBzOi8vaHdzLnZzaWdub24uY29tL1NBQVMvYXV0aCIsInJ1bGVzIjp7ImV4cGlyeSI6MTY2Njk0NzkzNiwibGluayI6bnVsbCwicnVsZXMiOlt7InJlc291cmNlcyI6WyIqIl0sImFjdGlvbnMiOlsiKiJdLCJjb25kaXRpb25zIjpudWxsLCJhZHZpY2UiOm51bGx9XX0sInBpZCI6IjE2NTM5ODQxLTZiOTktNDU4OC1hZmViLWJlODU5YmJmYzNlMSIsInBybl90eXBlIjoiU0VSVklDRSIsInBybiI6InNjaW1fdGVzdF9jbGllbnRfYWNzMkBIV1MiLCJqdGkiOiIxNjUzOTg0MS02Yjk5LTQ1ODgtYWZlYi1iZTg1OWJiZmMzZTEiLCJjaWQiOiJzY2ltX3Rlc3RfY2xpZW50X2FjczIifQ.uXTNPlGUmXSiQG9xqJTZVaeneJreFadcbMoY4ohqFXWACl4qyvd3tTxdCdE8SFJJ5iOxxhsMESx9ZgSJnq7g-H3d6Wf95l_bTDyErHWpBbmKNzY-fhns9MP_3RdL_FXdQPTCR6DYoAVT1WtjPXqWQ3w3vWuyF7fDthXiIVD6ZDs",
+      "Cookie" : "AWSALB=kbvSJIzguyDyMGUk7qJIcoJUilIuFOQwAEwK7Lkn+htcPPB79yzJx7t8/nZO/YzDeR2tJpkF5sh/Y1aK32uv6kDpGzxTCeBBGmFfZCskI9Tv6nVFBn2lYpHp1F7L; AWSALBCORS=kbvSJIzguyDyMGUk7qJIcoJUilIuFOQwAEwK7Lkn+htcPPB79yzJx7t8/nZO/YzDeR2tJpkF5sh/Y1aK32uv6kDpGzxTCeBBGmFfZCskI9Tv6nVFBn2lYpHp1F7L"
+    },
+    "body" : ""
+  }, {
+    "id" : "3598ff4b-bbce-4ad8-8175-4cbc5633104f",
+    "name" : "/cds/items/acs/config/global",
+    "method" : "POST",
+    "url" : "https://hws.vsignon.com/cds/items/vidm/features/global",
+    "headers" : {
+      "accept" : "application/vnd.vmware.vidm.cds.global.flag+json",
+      "Content-Type" : "application/vnd.vmware.vidm.cds.global.flag+json",
+      "Authorization" : "HZN eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIyOGMwOWFiNS04YTA4LTRkMTYtOWI2Yi1jOWJjNGU2ZjIzMGQiLCJzY3AiOiJ1c2VyIHByb2ZpbGUgZW1haWwgYWRtaW4gb3BlcmF0b3IiLCJlbWwiOiJrbmFrdWxAdm13YXJlLmNvbSIsImN0eCI6Ilt7XCJtdGRcIjpcInVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphYzpjbGFzc2VzOlBhc3N3b3JkUHJvdGVjdGVkVHJhbnNwb3J0XCIsXCJpYXRcIjoxNjc3MjI5MzQ1LFwidHlwXCI6XCI4NTlmMTc0NS0xZWViLTQ1MTgtYjNmNS00OTI4NGYxZGIzNzJcIixcImlkbVwiOmZhbHNlfV0iLCJpc3MiOiJodHRwczovL2h3cy52c2lnbm9uLmNvbS9TQUFTL2F1dGgiLCJwaWQiOiIzODU4YTFhZi03ZWRmLTRkN2ItOGM5Mi05ZDMzMWFmM2I3MzciLCJydWxlcyI6eyJleHBpcnkiOjE2NzcyNTgxNDUsInJ1bGVzIjpbeyJkaXNhYmxlZCI6ZmFsc2UsInJlc291cmNlcyI6WyIqIl0sImFjdGlvbnMiOlsiKiJdfV19LCJwcm4iOiJrbmFrdWxASFdTIiwiYXVkIjoiaHR0cHM6Ly9od3MudnNpZ25vbi5jb20vU0FBUy9hdXRoL29hdXRodG9rZW4iLCJ3aWQiOiIiLCJpZHAiOiIiLCJ1c2VyX2lkIjoiMTYyNTczOCIsImF1dGhfdGltZSI6MTY3NzIyOTM0NSwiZG9tYWluIjoidm13YXJlLmNvbSIsImV4cCI6MTY3NzI1ODE0NSwicHJuX3R5cGUiOiJVU0VSIiwiaWF0IjoxNjc3MjI5MzQ2LCJkaWQiOiIiLCJqdGkiOiIzODU4YTFhZi03ZWRmLTRkN2ItOGM5Mi05ZDMzMWFmM2I3MzciLCJjaWQiOiIifQ.ZD7O1WsQpnstiPuva3cQUJCfP8Y3jMtEEMziylbkx_vl9aM_UfKPSepFb6JFqCSsk1u0pdMOoYZ7FXTTUaLByn-JppCRr7AD5gii2kl_UvUl7G3siEEgkUQQz8IxtrTOM6W1eBLhKlPZCUug9hh5luGaZffHQkgATCYpLz6izrU"
+    },
+    "body" : "{\n    \"service\": \"vidm\",\n    \"name\": \"userGroupChangeEventPublisherEnabled\",\n    \"enabled\": \"true\"\n}"
+  }, {
+    "id" : "2acf488a-7cb6-46f0-83ca-a74afb0bfb7e",
+    "name" : "/cds/items/{service}/features/tenant/{tenantName}",
+    "method" : "POST",
+    "url" : "https://hws.vsignon.com/cds/items/vidm/features/tenant/e2e-good",
+    "headers" : {
+      "Authorization" : "HZN eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE2OTI4NzY4ODIsImlhdCI6MTY5MjI3MjA4Miwic3ViIjoiMjA3Y2E0ODctNmE1OC00M2IwLWIyZGQtMjNjNDM4OTNmYmE5IiwiYXV0aF90aW1lIjoxNjkyMjcyMDgyLCJzY3AiOiJ1c2VyIGVtYWlsIHByb2ZpbGUgYWRtaW4gc3lzdGVtIiwiYXVkIjoiaHR0cHM6Ly9od3MudnNpZ25vbi5jb20vU0FBUy9hdXRoL29hdXRodG9rZW4iLCJ1c2VyX2lkIjoiMjAxMTUyMSIsImVtbCI6Ik9BdXRoQ2xpZW50X3N5c3RlbWNsaWVudDFAbm9yZXBseS5jb20iLCJhenAiOiJzeXN0ZW0tY2xpZW50LTEiLCJpc3MiOiJodHRwczovL2h3cy52c2lnbm9uLmNvbS9TQUFTL2F1dGgiLCJydWxlcyI6eyJleHBpcnkiOjE2OTI4NzY4ODIsImxpbmsiOm51bGwsInJ1bGVzIjpbeyJyZXNvdXJjZXMiOlsiKiJdLCJhY3Rpb25zIjpbIioiXSwiY29uZGl0aW9ucyI6bnVsbCwiYWR2aWNlIjpudWxsfV19LCJwaWQiOiI3MzkyMzVjNS1lZTM0LTQ4MjUtOGE5Mi01Yzk3ZDVmYmU5OTgiLCJwcm5fdHlwZSI6IlNFUlZJQ0UiLCJwcm4iOiJzeXN0ZW0tY2xpZW50LTFASFdTIiwianRpIjoiNzM5MjM1YzUtZWUzNC00ODI1LThhOTItNWM5N2Q1ZmJlOTk4IiwiY2lkIjoic3lzdGVtLWNsaWVudC0xIn0.ns4gQb4GZaxNN3OHk1vjxIy5Hp8iM4zGDkbf_ebTvNHbCh6ihPWYMBc6sHC-7NzSgUxREWlvtNjEBenBI6tsThS69H-OBdfn1xlFT0bPS7VGw5tUCgpply29pLjxfHZYM1SfMS0t-hRFYF6xp-07n8oXv8AGwKawlS2nDFyzoaY",
+      "Content-Type" : "application/vnd.vmware.vidm.cds.tenant.flag+json",
+      "Accept" : "application/vnd.vmware.vidm.cds.tenant.item.metadata+json"
+    },
+    "body" : "{\n    \"service\": \"vidm\",\n    \"tenantId\": \"e2e-good\",\n    \"name\": \"orgEnableSystemLoginEndpoint\",\n    \"overridable\": false,\n    \"auditable\": true,\n    \"notifiable\": true,\n    \"defaultValue\": \"true\",\n    \"sensitive\": false,\n    \"permission\": \"{\\\"permissions\\\":{\\\"TENANT_MANAGER\\\":[\\\"READ\\\",\\\"WRITE\\\"],\\\"ADMIN\\\":[\\\"READ\\\"],\\\"TENANT_ANCESTOR_MANAGER\\\":[\\\"READ\\\",\\\"WRITE\\\"]}}\",\n    \"valueType\": \"com.tricipher.saas.to.artifact.BooleanArtifactType\"\n}"
+  }, {
+    "id" : "77968c1d-31ba-4372-9ba8-c7f9f08ce1cf",
+    "name" : "/cds/items/{service}/metadata/config/tenant/{configName}",
+    "method" : "GET",
+    "url" : "https://hws.vsignon.com/cds/items/vidm/metadata/config/tenant/orgEnableSystemLoginEndpoint",
+    "headers" : {
+      "Authorization" : "HZN eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIyOGMwOWFiNS04YTA4LTRkMTYtOWI2Yi1jOWJjNGU2ZjIzMGQiLCJzY3AiOiJ1c2VyIHByb2ZpbGUgZW1haWwgYWRtaW4gb3BlcmF0b3IiLCJlbWwiOiJrbmFrdWxAdm13YXJlLmNvbSIsImN0eCI6Ilt7XCJtdGRcIjpcInVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphYzpjbGFzc2VzOlBhc3N3b3JkUHJvdGVjdGVkVHJhbnNwb3J0XCIsXCJpYXRcIjoxNjkyMjcxOTQ3LFwidHlwXCI6XCI4NTlmMTc0NS0xZWViLTQ1MTgtYjNmNS00OTI4NGYxZGIzNzJcIixcImlkbVwiOmZhbHNlfV0iLCJpc3MiOiJodHRwczovL2h3cy52c2lnbm9uLmNvbS9TQUFTL2F1dGgiLCJwaWQiOiI2YWYyZGUyMC0xYmViLTRiNWMtOGIzMS01ZWE2NGNjNmVmMjgiLCJydWxlcyI6eyJleHBpcnkiOjE2OTIzMDA3NDcsInJ1bGVzIjpbeyJkaXNhYmxlZCI6ZmFsc2UsInJlc291cmNlcyI6WyIqIl0sImFjdGlvbnMiOlsiKiJdfV19LCJwcm4iOiJrbmFrdWxASFdTIiwiYXVkIjoiaHR0cHM6Ly9od3MudnNpZ25vbi5jb20vU0FBUy9hdXRoL29hdXRodG9rZW4iLCJ3aWQiOiIiLCJpZHAiOiIiLCJ1c2VyX2lkIjoiMTYyNTczOCIsImF1dGhfdGltZSI6MTY5MjI3MTk0NywiZG9tYWluIjoidm13YXJlLmNvbSIsImV4cCI6MTY5MjMwMDc0NywicHJuX3R5cGUiOiJVU0VSIiwiaWF0IjoxNjkyMjcxOTQ3LCJkaWQiOiIiLCJqdGkiOiI2YWYyZGUyMC0xYmViLTRiNWMtOGIzMS01ZWE2NGNjNmVmMjgiLCJjaWQiOiIifQ.HDPisbLbO0-HHk4VoQ0WE6fX_2hdqN4sRXfy7eRi1BK9-KYdhWqEGIbDIklJJTOkbDVwJ2hnbzyFqcesbQwB4SpmrO5JE0XbtYGdzc8ycKvj73I1ri4Yz4YqynlzqjuD980cpcDW1_O1NhC_6CBiaC4OtFYK9WRREoe-mD_Z8Nc"
+    },
+    "body" : ""
+  }, {
+    "id" : "171db07c-cecb-4bfa-8e26-b95b71136509",
+    "name" : "/cds/items/{service}/features/tenant/{tenant}/{configname}",
+    "method" : "GET",
+    "url" : "https://hws.vsignon.com/cds/items/vidm/features/tenant/e2e-good/orgEnableSystemLoginEndpoint",
+    "headers" : {
+      "Authorization" : "HZN eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE2OTI4NzY4ODIsImlhdCI6MTY5MjI3MjA4Miwic3ViIjoiMjA3Y2E0ODctNmE1OC00M2IwLWIyZGQtMjNjNDM4OTNmYmE5IiwiYXV0aF90aW1lIjoxNjkyMjcyMDgyLCJzY3AiOiJ1c2VyIGVtYWlsIHByb2ZpbGUgYWRtaW4gc3lzdGVtIiwiYXVkIjoiaHR0cHM6Ly9od3MudnNpZ25vbi5jb20vU0FBUy9hdXRoL29hdXRodG9rZW4iLCJ1c2VyX2lkIjoiMjAxMTUyMSIsImVtbCI6Ik9BdXRoQ2xpZW50X3N5c3RlbWNsaWVudDFAbm9yZXBseS5jb20iLCJhenAiOiJzeXN0ZW0tY2xpZW50LTEiLCJpc3MiOiJodHRwczovL2h3cy52c2lnbm9uLmNvbS9TQUFTL2F1dGgiLCJydWxlcyI6eyJleHBpcnkiOjE2OTI4NzY4ODIsImxpbmsiOm51bGwsInJ1bGVzIjpbeyJyZXNvdXJjZXMiOlsiKiJdLCJhY3Rpb25zIjpbIioiXSwiY29uZGl0aW9ucyI6bnVsbCwiYWR2aWNlIjpudWxsfV19LCJwaWQiOiI3MzkyMzVjNS1lZTM0LTQ4MjUtOGE5Mi01Yzk3ZDVmYmU5OTgiLCJwcm5fdHlwZSI6IlNFUlZJQ0UiLCJwcm4iOiJzeXN0ZW0tY2xpZW50LTFASFdTIiwianRpIjoiNzM5MjM1YzUtZWUzNC00ODI1LThhOTItNWM5N2Q1ZmJlOTk4IiwiY2lkIjoic3lzdGVtLWNsaWVudC0xIn0.ns4gQb4GZaxNN3OHk1vjxIy5Hp8iM4zGDkbf_ebTvNHbCh6ihPWYMBc6sHC-7NzSgUxREWlvtNjEBenBI6tsThS69H-OBdfn1xlFT0bPS7VGw5tUCgpply29pLjxfHZYM1SfMS0t-hRFYF6xp-07n8oXv8AGwKawlS2nDFyzoaY",
+      "Content-Type" : "application/vnd.vmware.vidm.cds.tenant.flag+json",
+      "Accept" : "application/vnd.vmware.vidm.cds.tenant.item.metadata+json"
+    },
+    "body" : "{\n    \"service\": \"vidm\",\n    \"tenantId\": \"e2e-good\",\n    \"name\": \"orgEnableSystemLoginEndpoint\",\n    \"overridable\": false,\n    \"auditable\": true,\n    \"notifiable\": true,\n    \"defaultValue\": \"true\",\n    \"sensitive\": false,\n    \"permission\": \"{\\\"permissions\\\":{\\\"TENANT_MANAGER\\\":[\\\"READ\\\",\\\"WRITE\\\"],\\\"ADMIN\\\":[\\\"READ\\\"],\\\"TENANT_ANCESTOR_MANAGER\\\":[\\\"READ\\\",\\\"WRITE\\\"]}}\",\n    \"valueType\": \"com.tricipher.saas.to.artifact.BooleanArtifactType\"\n}"
+  }, {
+    "id" : "cd3a3bda-6d15-43b6-a130-587e13bef697",
+    "name" : "/cds/items/{service}/features/global/{flagName}",
+    "method" : "GET",
+    "url" : "https://hws.vsignon.com/cds/items/vidm/features/global/orgEnableSystemLoginEndpoint",
+    "headers" : {
+      "Authorization" : "HZN eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE2OTI2MjI2NTAsImlhdCI6MTY5MjAxNzg1MCwic3ViIjoiMjA3Y2E0ODctNmE1OC00M2IwLWIyZGQtMjNjNDM4OTNmYmE5IiwiYXV0aF90aW1lIjoxNjkyMDE3ODUwLCJzY3AiOiJ1c2VyIGVtYWlsIHByb2ZpbGUgYWRtaW4gc3lzdGVtIiwiYXVkIjoiaHR0cHM6Ly9od3MudnNpZ25vbi5jb20vU0FBUy9hdXRoL29hdXRodG9rZW4iLCJ1c2VyX2lkIjoiMjAxMTUyMSIsImVtbCI6Ik9BdXRoQ2xpZW50X3N5c3RlbWNsaWVudDFAbm9yZXBseS5jb20iLCJhenAiOiJzeXN0ZW0tY2xpZW50LTEiLCJpc3MiOiJodHRwczovL2h3cy52c2lnbm9uLmNvbS9TQUFTL2F1dGgiLCJydWxlcyI6eyJleHBpcnkiOjE2OTI2MjI2NTAsImxpbmsiOm51bGwsInJ1bGVzIjpbeyJyZXNvdXJjZXMiOlsiKiJdLCJhY3Rpb25zIjpbIioiXSwiY29uZGl0aW9ucyI6bnVsbCwiYWR2aWNlIjpudWxsfV19LCJwaWQiOiI4ZjQzNmYyYS05NDJjLTRlYzAtOWEyMy1iYTEyZjg5Yjk1M2EiLCJwcm5fdHlwZSI6IlNFUlZJQ0UiLCJwcm4iOiJzeXN0ZW0tY2xpZW50LTFASFdTIiwianRpIjoiOGY0MzZmMmEtOTQyYy00ZWMwLTlhMjMtYmExMmY4OWI5NTNhIiwiY2lkIjoic3lzdGVtLWNsaWVudC0xIn0.IldqCuv85BVeMdjN_LsnrFzMTfZ1z7lLyt6MxH3qQhjVVcNi0jGy2GPokgZss8ouesjgMscwg2aPMs02uQfqvjHsbsAo-mxCQVj1IAPFm0tpxUH8qrAtsssvPZhOe9OnSrOQ3LbfOU5lmmk0PbnrBJ6Se8rVmGsM8Mmy7odfA0Y"
+    },
+    "body" : ""
+  }, {
+    "id" : "fac301b7-1f71-4d7e-9b15-bc6e4208cdb4",
+    "name" : "/cds/items/{service}/config/tenant/{tenantId}",
+    "method" : "POST",
+    "url" : "https://boomi.vsignon.com/cds/items/vidm/config/tenant/BOOMI",
+    "headers" : {
+      "accept" : "application/vnd.vmware.vidm.cds.tenant.item+json",
+      "Content-Type" : "application/vnd.vmware.vidm.cds.tenant.item+json",
+      "Authorization" : "HZN eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE2OTQ2MjkwNTQsImlhdCI6MTY5NDAyNDI1NCwic3ViIjoiMjA3Y2E0ODctNmE1OC00M2IwLWIyZGQtMjNjNDM4OTNmYmE5IiwiYXV0aF90aW1lIjoxNjk0MDI0MjU0LCJzY3AiOiJ1c2VyIGVtYWlsIHByb2ZpbGUgYWRtaW4gc3lzdGVtIiwiYXVkIjoiaHR0cHM6Ly9od3MudnNpZ25vbi5jb20vU0FBUy9hdXRoL29hdXRodG9rZW4iLCJ1c2VyX2lkIjoiMjAxMTUyMSIsImVtbCI6Ik9BdXRoQ2xpZW50X3N5c3RlbWNsaWVudDFAbm9yZXBseS5jb20iLCJhenAiOiJzeXN0ZW0tY2xpZW50LTEiLCJpc3MiOiJodHRwczovL2h3cy52c2lnbm9uLmNvbS9TQUFTL2F1dGgiLCJydWxlcyI6eyJleHBpcnkiOjE2OTQ2MjkwNTQsImxpbmsiOm51bGwsInJ1bGVzIjpbeyJyZXNvdXJjZXMiOlsiKiJdLCJhY3Rpb25zIjpbIioiXSwiY29uZGl0aW9ucyI6bnVsbCwiYWR2aWNlIjpudWxsfV19LCJwaWQiOiIyZmM2OTRiNi05N2MzLTQwNGYtOTc5Ny0xNWExYTA0NjM3NGUiLCJwcm5fdHlwZSI6IlNFUlZJQ0UiLCJwcm4iOiJzeXN0ZW0tY2xpZW50LTFASFdTIiwianRpIjoiMmZjNjk0YjYtOTdjMy00MDRmLTk3OTctMTVhMWEwNDYzNzRlIiwiY2lkIjoic3lzdGVtLWNsaWVudC0xIn0.PQldMwoU526jbR0qXryDlsUi6Q6iIfGQ4LhZ4SLYwdno38pC_eIlpztblT3j3ZVOSixyyRFtV9Xpb-8PBakcI6na28QYrOIIjaxq40b7mdAkfLLwy5VEV-QTjmLk_Z-52h813voijKkX-zGIhE6wleNBGkuqeELYb0PMa-Z6AvQ"
+    },
+    "body" : "{\n    \"service\": \"vidm\",\n    \"tenantId\": \"BOOMI\",\n    \"name\": \"orgEnableTokenFingerprint\",\n    \"value\": \"true\"\n}"
+  }, {
+    "id" : "b13b031d-ebbc-4941-8fcb-989f87017a96",
+    "name" : "https://hws.vsignon.com/SAAS/jersey/manager/api/tenants/settings?tenantId=BOOMI",
+    "method" : "PUT",
+    "url" : "https://hws.vsignon.com/SAAS/jersey/manager/api/tenants/settings?tenantId=BOOMI",
+    "headers" : {
+      "Authorization" : "HZN eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE3NDc3NzA5MzgsImlhdCI6MTc0Nzc0OTMzOCwic3ViIjoiNmE5ODUwYzYtMjVmZi00MDYwLWI1YTMtNzBlMTFjM2E4OTNkIiwiYXV0aF90aW1lIjoxNzQ3NzQ5MzM4LCJzY3AiOiJhZG1pbiBzeXN0ZW0iLCJhdWQiOiJodHRwczovL2h3cy52c2lnbm9uLmNvbS9TQUFTL2F1dGgvb2F1dGh0b2tlbiIsInVzZXJfaWQiOiI0MzI3NDQiLCJlbWwiOiJPQXV0aENsaWVudF9hY3NAbm9yZXBseS5jb20iLCJhenAiOiJhY3MiLCJpc3MiOiJodHRwczovL2h3cy52c2lnbm9uLmNvbS9TQUFTL2F1dGgiLCJydWxlcyI6eyJleHBpcnkiOjE3NDc3NzA5MzgsImxpbmsiOm51bGwsInJ1bGVzIjpbeyJyZXNvdXJjZXMiOlsiKiJdLCJhY3Rpb25zIjpbIioiXSwiY29uZGl0aW9ucyI6bnVsbCwiYWR2aWNlIjpudWxsfV19LCJwaWQiOiJjMTg5ZWQ5ZC1kMzNhLTQ0OTAtOGEwNS0yMTU5NWY2ZjcyYmEiLCJwcm5fdHlwZSI6IlNFUlZJQ0UiLCJwcm4iOiJhY3NASFdTIiwianRpIjoiYzE4OWVkOWQtZDMzYS00NDkwLThhMDUtMjE1OTVmNmY3MmJhIiwiY2lkIjoiYWNzIn0.OzBRK1pTsw2ZGMAms8wuiL0yfGKBZzCqLOSs3jeN-dHIEDz3vroNtsNKhWU-ihC_Sv5eVq5Xx0tEa1hLVgsN1fVjE6pu4loNPhJR1dzIVK0xcEB9hr7VsarkFZjDfbq7fwjPmkKgZpa9VOYWd-n5_knoQi0zzz1Nmx0yJ2XnoR8",
+      "Accept" : "application/vnd.vmware.horizon.manager.tenants.tenant.config+json",
+      "Content-Type" : "application/vnd.vmware.horizon.manager.tenants.tenant.config+json"
+    },
+    "body" : "{\n    \"name\": \"orgOidcFeatureEnabled\",\n    \"value\": \"true\"\n}"
+  } ]
+}, {
+  "name" : "Mockserver",
+  "requests" : [ {
+    "id" : "c806a8f5-0dbf-4ecd-9ebd-c67bb188d0dc",
+    "name" : "/mockserver/clear?type=log",
+    "method" : "PUT",
+    "url" : "http://localhost:1080/mockserver/clear?type=log",
+    "headers" : { },
+    "body" : ""
+  }, {
+    "id" : "aff87e06-9d23-44c8-ab31-da28dee72757",
+    "name" : "/mockserver/retrieve?type=requests",
+    "method" : "PUT",
+    "url" : "http://localhost:1080/mockserver/retrieve?type=requests",
+    "headers" : { },
+    "body" : ""
+  }, {
+    "id" : "f14a94df-f9d2-4865-8eb6-7e3a4a93d298",
+    "name" : "/mockserver/retrieve?type=ACTIVE_EXPECTATIONS",
+    "method" : "PUT",
+    "url" : "http://localhost:1080/mockserver/retrieve?type=ACTIVE_EXPECTATIONS",
+    "headers" : { },
+    "body" : ""
+  } ]
 } ]

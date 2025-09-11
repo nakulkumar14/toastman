@@ -1,14 +1,18 @@
 package com.toast.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Collection {
 
     private String name;
     private List<SavedRequest> requests = new ArrayList<>();
 
-    public Collection() {
+    public Collection(String collectionName, List<SavedRequest> result) {
+        this.name = collectionName;
+        this.requests = result;
     } // needed for Jackson
 
     public Collection(String name) {

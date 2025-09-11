@@ -5,9 +5,12 @@ import com.toast.demo.model.Collection;
 import com.toast.demo.model.SavedRequest;
 import com.toast.demo.service.CollectionsStore;
 import com.toast.demo.util.CurlParser;
+import java.io.File;
+import java.io.IOException;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextInputDialog;
@@ -17,8 +20,13 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CollectionsView extends BorderPane {
+
+    private static final Logger log = LoggerFactory.getLogger(CollectionsView.class);
 
     private final TreeView<Object> treeView = new TreeView<>();
     private final CollectionsStore store = CollectionsStore.getInstance();
@@ -28,6 +36,8 @@ public class CollectionsView extends BorderPane {
     private final Button deleteButton = new Button("Delete");
     private final Button importButton = new Button("Import cURL");
 
+    private final Button importCollectionButton = new Button("Import Collection");
+
 
     public CollectionsView(RequestTabPane tabPane) {
         this.tabPane = tabPane;
@@ -36,11 +46,13 @@ public class CollectionsView extends BorderPane {
 
         // toolbar
         ToolBar toolBar = new ToolBar();
-        toolBar.getItems().addAll(addButton, deleteButton, importButton);
+        toolBar.getItems().addAll(addButton, deleteButton, importButton, importCollectionButton);
 
         setCenter(treeView);
 
         setTop(toolBar);
+
+        setupImportCollectionAction();
 
         // Listen to store changes
         store.addListener(updatedCollections -> {
@@ -187,5 +199,48 @@ public class CollectionsView extends BorderPane {
 
         tabPane.getTabs().add(tabPane.getTabs().size() - 1, tab); // before the + tab
         tabPane.getSelectionModel().select(tab);
+    }
+
+    // Add to your CollectionsView class
+    private void setupImportCollectionAction() {
+        importCollectionButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Import Collection");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files (*.json)", "*.json"));
+            File file = fileChooser.showOpenDialog(getScene().getWindow());
+
+            if (file != null) {
+                try {
+                    // Parse the JSON into a Collection object
+                    // You'll need a way to deserialize the JSON. A library like Gson or Jackson is ideal.
+                    Collection importedCollection = CollectionImporter.importCollection(file);
+                    log.debug("Imported collection: {}", importedCollection.getName());
+                    CollectionsStore.getInstance().addCollection(importedCollection);
+
+                    refresh();
+//                    Platform.runLater(this::refresh); // important
+
+                    showAlert(Alert.AlertType.INFORMATION, "Success", "The file was saved successfully.");
+                } catch (IOException | RuntimeException ex) {
+                    ex.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to import collection: " + ex.getMessage());
+                }
+            }
+        });
+    }
+
+    /**
+     * Displays a simple alert dialog to the user.
+     *
+     * @param alertType The type of alert (e.g., AlertType.ERROR, AlertType.INFORMATION).
+     * @param title     The title of the alert window.
+     * @param message   The message to display in the alert dialog.
+     */
+    private void showAlert(AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null); // Optional: you can set this to display a header
+        alert.setContentText(message);
+        alert.showAndWait(); // show and wait for the user to close the dialog
     }
 }
