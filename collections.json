@@ -1,13 +1,4 @@
 [ {
   "name" : "Default",
-  "requests" : [ {
-    "id" : "c0d7a450-5ecc-4f02-ac0d-746cc051b8e7",
-    "name" : "w2",
-    "method" : "GET",
-    "url" : "http://www.microsoft.com",
-    "headers" : {
-      "Content-Type" : "application/json"
-    },
-    "body" : ""
-  } ]
+  "requests" : [ ]
 } ]
