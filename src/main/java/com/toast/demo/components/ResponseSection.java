@@ -22,8 +22,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.fxmisc.richtext.StyleClassedTextArea;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ResponseSection extends VBox {
+
+    private static final Logger log = LoggerFactory.getLogger(ResponseSection.class);
 
     private static final String JSON_TYPE = "application/json";
     private static final String HTML_TYPE = "text/html";
@@ -156,11 +160,9 @@ public class ResponseSection extends VBox {
     private void saveFile(String content, File file) {
         try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(content);
-            // Display a success message or other feedback
-            System.out.println("File saved successfully to: " + file.getAbsolutePath());
+            log.info("File saved successfully to: " + file.getAbsolutePath());
         } catch (IOException ex) {
-            // Handle the exception, e.g., show an error dialog
-            System.err.println("Error saving file: " + ex.getMessage());
+            log.error("Error saving file: ", ex);
         }
     }
 
