@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -21,6 +22,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
@@ -41,164 +43,54 @@ public class CollectionsView extends BorderPane {
     private final Button importCollectionButton = new Button("Import Collection");
 
     private final TextField searchField = new TextField();
-
+    private final Button clearBtn = new Button("❌");
 
     public CollectionsView(RequestTabPane tabPane) {
         this.tabPane = tabPane;
         setPrefWidth(250);
         setPadding(new Insets(10));
 
-        // toolbar
-        ToolBar toolBar = new ToolBar();
-        toolBar.getItems().addAll(addButton, deleteButton, importButton, importCollectionButton);
-
-        // wrap toolbar + search bar together
-        VBox topBox = new VBox(5, toolBar, searchField);
-        topBox.setPadding(new Insets(5));
-
-        setTop(topBox);
-
-        // main tree view stays in center
-        setCenter(treeView);
-
+        setupToolbar();
+        setupTreeView();
+        setupButtonActions();
         setupImportCollectionAction();
 
-        searchField.setPromptText("Search requests...");
-        searchField.textProperty().addListener((obs, oldVal, newVal) -> filterSearch(newVal));
-
         // Listen to store changes
-        store.addListener(updatedCollections -> {
-            Platform.runLater(this::refresh);
-        });
+        store.addListener(updatedCollections -> Platform.runLater(this::refresh));
 
         // List of saved collection
         refresh();
 
-        // add collection
-        addButton.setOnAction(e -> {
-            TextInputDialog dialog = new TextInputDialog("New Collection");
-            dialog.setHeaderText("Enter collection name:");
-            dialog.setTitle("Add Collection");
-            dialog.showAndWait().ifPresent(name -> {
-                if (!name.isBlank()) {
-                    store.addCollection(new Collection(name));
-                    refresh();
-                }
-            });
-        });
-
-        // delete collection
-        deleteButton.setOnAction(e -> {
-            TreeItem<Object> selected = treeView.getSelectionModel().getSelectedItem();
-            if (selected != null) {
-                if (selected.getValue() instanceof Collection collection) {
-                    store.removeCollectionByName(collection.getName());
-                } else if (selected.getValue() instanceof SavedRequest req) {
-                    // Get the parent TreeItem (the Collection)
-                    TreeItem<Object> parent = selected.getParent();
-                    if (parent != null && parent.getValue() instanceof Collection collection) {
-                        // Remove the request from the collection
-                        store.removeRequestFromCollection(collection.getName(), req);
-                    }
-                }
-                refresh();
-            }
-        });
-
-        importButton.setOnAction(e -> {
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Import from cURL");
-            dialog.setHeaderText("Paste your cURL command below:");
-            dialog.getEditor().setPrefWidth(600);
-
-            dialog.showAndWait().ifPresent(curl -> {
-                try {
-                    SavedRequest req = CurlParser.parseCurl(curl);
-
-                    // Save to first collection for now
-                    CollectionsStore.getInstance()
-                        .addRequestToCollection("Default", req);
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    Alert alert = new Alert(Alert.AlertType.ERROR,
-                        "Failed to parse cURL:\n" + ex.getMessage());
-                    alert.showAndWait();
-                }
-            });
-        });
-
-        treeView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                TreeItem<Object> selected = treeView.getSelectionModel().getSelectedItem();
-                if (selected != null && selected.getValue() instanceof SavedRequest req) {
-                    openRequestInNewTab(req);
-                }
-            }
-        });
-
-        treeView.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.DELETE) {
-                TreeItem<Object> selected = treeView.getSelectionModel().getSelectedItem();
-                if (selected != null) {
-                    if (selected.getValue() instanceof SavedRequest req) {
-                        TreeItem<Object> parent = selected.getParent();
-                        if (parent != null && parent.getValue() instanceof Collection collection) {
-                            store.removeRequestFromCollection(collection.getName(), req);
-                            refresh();
-                        }
-                    }
-                }
-            }
-        });
-
         getStyleClass().add("collections-view");
     }
 
-    private void filterSearch(String query) {
-        if (query == null || query.isBlank()) {
-            refresh();
-            return;
-        }
-
-        String lowerQuery = query.toLowerCase();
-
-        TreeItem<Object> root = new TreeItem<>("Collections");
-        root.setExpanded(true);
-
-        for (Collection col : store.getCollections()) {
-            TreeItem<Object> collectionItem = new TreeItem<>(col);
-            for (SavedRequest req : col.getRequests()) {
-                if (req.getName().toLowerCase().contains(lowerQuery) ||
-                    req.getUrl().toLowerCase().contains(lowerQuery)) {
-                    collectionItem.getChildren().add(new TreeItem<>(req));
-                }
-            }
-            if (!collectionItem.getChildren().isEmpty()) {
-                root.getChildren().add(collectionItem);
-            }
-        }
-
-        treeView.setRoot(root);
-//        treeView.setShowRoot(false);
+    private void setupToolbar() {
+        ToolBar toolBar = new ToolBar(addButton, deleteButton, importButton, importCollectionButton);
+        VBox topBox = new VBox(5, toolBar, buildSearchBox());
+        topBox.setPadding(new Insets(5));
+        setTop(topBox);
+        // main tree view stays in center
+        setCenter(treeView);
     }
 
-    public void refresh() {
-        TreeItem<Object> root = new TreeItem<>("Collections");
-        root.setExpanded(true);
+    private HBox buildSearchBox() {
+        searchField.setPromptText("Search requests...");
+        clearBtn.setVisible(false);
+        clearBtn.setOnAction(e -> searchField.clear());
 
-        for (Collection col : store.getCollections()) {
-            TreeItem<Object> collectionItem = new TreeItem<>(col);
-            for (SavedRequest req : col.getRequests()) {
-                collectionItem.getChildren().add(new TreeItem<>(req));
-            }
-            root.getChildren().add(collectionItem);
-        }
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> {
+            clearBtn.setVisible(newVal != null && !newVal.isBlank());
+            filterSearch(newVal);
+        });
 
-        treeView.setRoot(root);
+        HBox searchBox = new HBox(5, searchField, clearBtn);
+        searchBox.setAlignment(Pos.CENTER_LEFT);
+        searchBox.setPadding(new Insets(5));
+        return searchBox;
+    }
+
+    private void setupTreeView() {
         treeView.setShowRoot(false);
-
-        // custom cell factory: display names
         treeView.setCellFactory(tv -> new TreeCell<>() {
             @Override
             protected void updateItem(Object item, boolean empty) {
@@ -214,6 +106,99 @@ public class CollectionsView extends BorderPane {
                 }
             }
         });
+
+        treeView.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                Object val = getSelectedValue();
+                if (val instanceof SavedRequest req) {
+                    openRequestInNewTab(req);
+                }
+            }
+        });
+
+        treeView.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.DELETE) {
+                deleteSelected();
+            }
+        });
+    }
+
+    private void setupButtonActions() {
+        // add collection
+        addButtonAction();
+        // delete collection
+        deleteButtonAction();
+        importButtonAction();
+    }
+
+    private void importButtonAction() {
+        importButton.setOnAction(e -> {
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Import from cURL");
+            dialog.setHeaderText("Paste your cURL command below:");
+            dialog.getEditor().setPrefWidth(600);
+
+            dialog.showAndWait().ifPresent(curl -> {
+                try {
+                    SavedRequest req = CurlParser.parseCurl(curl);
+
+                    // Save to first collection for now
+                    CollectionsStore.getInstance()
+                        .addRequestToCollection("Default", req);
+                } catch (Exception ex) {
+                    log.error("Failed to parse cURL", ex);
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to parse cURL:\n" + ex.getMessage());
+                }
+            });
+        });
+    }
+
+    private void deleteButtonAction() {
+        deleteButton.setOnAction(e -> deleteSelected());
+    }
+
+    private void addButtonAction() {
+        addButton.setOnAction(e -> {
+            TextInputDialog dialog = new TextInputDialog("New Collection");
+            dialog.setHeaderText("Enter collection name:");
+            dialog.setTitle("Add Collection");
+            dialog.showAndWait().ifPresent(name -> {
+                if (!name.isBlank()) {
+                    store.addCollection(new Collection(name));
+                    refresh();
+                }
+            });
+        });
+    }
+
+    private void filterSearch(String query) {
+        treeView.setRoot(buildTree(query));
+    }
+
+    public void refresh() {
+        treeView.setRoot(buildTree(null));
+    }
+
+    private TreeItem<Object> buildTree(String query) {
+        TreeItem<Object> root = new TreeItem<>("Collections");
+        root.setExpanded(true);
+        String q = query == null ? null : query.toLowerCase();
+
+        for (Collection col : store.getCollections()) {
+            TreeItem<Object> colItem = new TreeItem<>(col);
+            for (SavedRequest req : col.getRequests()) {
+                if (q == null ||
+                    req.getName().toLowerCase().contains(q) ||
+                    req.getUrl().toLowerCase().contains(q) ||
+                    col.getName().toLowerCase().contains(q)) {
+                    colItem.getChildren().add(new TreeItem<>(req));
+                }
+            }
+            if (!colItem.getChildren().isEmpty()) {
+                root.getChildren().add(colItem);
+            }
+        }
+        return root;
     }
 
     private void openRequestInNewTab(SavedRequest req) {
@@ -258,15 +243,37 @@ public class CollectionsView extends BorderPane {
                     CollectionsStore.getInstance().addCollection(importedCollection);
 
                     refresh();
-//                    Platform.runLater(this::refresh); // important
 
                     showAlert(Alert.AlertType.INFORMATION, "Success", "The file was saved successfully.");
                 } catch (IOException | RuntimeException ex) {
-                    ex.printStackTrace();
+                    log.error("Failed to import collection", ex);
                     showAlert(Alert.AlertType.ERROR, "Error", "Failed to import collection: " + ex.getMessage());
                 }
             }
         });
+    }
+
+    private Object getSelectedValue() {
+        TreeItem<Object> selected = treeView.getSelectionModel().getSelectedItem();
+        return selected != null ? selected.getValue() : null;
+    }
+
+    private void deleteSelected() {
+        Object val = getSelectedValue();
+        if (val instanceof Collection col) {
+            store.removeCollectionByName(col.getName());
+        } else if (val instanceof SavedRequest req) {
+            Collection parent = getParentCollection(req);
+            if (parent != null) {
+                store.removeRequestFromCollection(parent.getName(), req);
+            }
+        }
+    }
+
+    private Collection getParentCollection(SavedRequest req) {
+        TreeItem<Object> selected = treeView.getSelectionModel().getSelectedItem();
+        TreeItem<Object> parent = selected != null ? selected.getParent() : null;
+        return (parent != null && parent.getValue() instanceof Collection col) ? col : null;
     }
 
     /**
