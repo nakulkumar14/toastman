@@ -1,0 +1,13 @@
+{
+  "name" : "New Collection2",
+  "requests" : [ {
+    "id" : "ab248fe6-31ed-42a2-a723-8504da12d646",
+    "name" : "r1",
+    "method" : "GET",
+    "url" : "google.com11",
+    "headers" : {
+      "Content-Type" : "application/json"
+    },
+    "body" : ""
+  } ]
+}

@@ -1,0 +1,13 @@
+{
+  "name" : "New Collection",
+  "requests" : [ {
+    "id" : "45c5ae30-35bc-4000-b454-3f8f5d6d8987",
+    "name" : "ndfds",
+    "method" : "GET",
+    "url" : "google.com",
+    "headers" : {
+      "Content-Type" : "application/json"
+    },
+    "body" : ""
+  } ]
+}

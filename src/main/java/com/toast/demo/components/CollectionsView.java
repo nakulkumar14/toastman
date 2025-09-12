@@ -186,17 +186,20 @@ public class CollectionsView extends BorderPane {
 
         for (Collection col : store.getCollections()) {
             TreeItem<Object> colItem = new TreeItem<>(col);
+
+            boolean collectionMatches = (q == null) || col.getName().toLowerCase().contains(q);
+
             for (SavedRequest req : col.getRequests()) {
                 if (q == null ||
                     req.getName().toLowerCase().contains(q) ||
                     req.getUrl().toLowerCase().contains(q) ||
-                    col.getName().toLowerCase().contains(q)) {
+                    collectionMatches) {
                     colItem.getChildren().add(new TreeItem<>(req));
                 }
             }
-            if (!colItem.getChildren().isEmpty()) {
-                root.getChildren().add(colItem);
-            }
+
+            root.getChildren().add(colItem);
+            colItem.setExpanded(true);
         }
         return root;
     }

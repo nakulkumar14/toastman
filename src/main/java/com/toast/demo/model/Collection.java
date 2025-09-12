@@ -10,6 +10,9 @@ public class Collection {
     private String name;
     private List<SavedRequest> requests = new ArrayList<>();
 
+    public Collection() {
+    }
+
     public Collection(String collectionName, List<SavedRequest> result) {
         this.name = collectionName;
         this.requests = result;
