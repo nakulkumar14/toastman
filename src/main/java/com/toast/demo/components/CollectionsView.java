@@ -13,6 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeCell;
@@ -20,6 +21,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +40,8 @@ public class CollectionsView extends BorderPane {
 
     private final Button importCollectionButton = new Button("Import Collection");
 
+    private final TextField searchField = new TextField();
+
 
     public CollectionsView(RequestTabPane tabPane) {
         this.tabPane = tabPane;
@@ -48,11 +52,19 @@ public class CollectionsView extends BorderPane {
         ToolBar toolBar = new ToolBar();
         toolBar.getItems().addAll(addButton, deleteButton, importButton, importCollectionButton);
 
+        // wrap toolbar + search bar together
+        VBox topBox = new VBox(5, toolBar, searchField);
+        topBox.setPadding(new Insets(5));
+
+        setTop(topBox);
+
+        // main tree view stays in center
         setCenter(treeView);
 
-        setTop(toolBar);
-
         setupImportCollectionAction();
+
+        searchField.setPromptText("Search requests...");
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> filterSearch(newVal));
 
         // Listen to store changes
         store.addListener(updatedCollections -> {
@@ -141,6 +153,34 @@ public class CollectionsView extends BorderPane {
         });
 
         getStyleClass().add("collections-view");
+    }
+
+    private void filterSearch(String query) {
+        if (query == null || query.isBlank()) {
+            refresh();
+            return;
+        }
+
+        String lowerQuery = query.toLowerCase();
+
+        TreeItem<Object> root = new TreeItem<>("Collections");
+        root.setExpanded(true);
+
+        for (Collection col : store.getCollections()) {
+            TreeItem<Object> collectionItem = new TreeItem<>(col);
+            for (SavedRequest req : col.getRequests()) {
+                if (req.getName().toLowerCase().contains(lowerQuery) ||
+                    req.getUrl().toLowerCase().contains(lowerQuery)) {
+                    collectionItem.getChildren().add(new TreeItem<>(req));
+                }
+            }
+            if (!collectionItem.getChildren().isEmpty()) {
+                root.getChildren().add(collectionItem);
+            }
+        }
+
+        treeView.setRoot(root);
+//        treeView.setShowRoot(false);
     }
 
     public void refresh() {
