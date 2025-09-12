@@ -2,6 +2,7 @@ package com.toast.demo.components;
 
 import com.toast.demo.RequestTabPane;
 import com.toast.demo.model.Collection;
+import com.toast.demo.model.Folder;
 import com.toast.demo.model.SavedRequest;
 import com.toast.demo.service.CollectionsStore;
 import com.toast.demo.util.CurlParser;
@@ -44,6 +45,7 @@ public class CollectionsView extends BorderPane {
 
     private final TextField searchField = new TextField();
     private final Button clearBtn = new Button("❌");
+    private final Button addFolderButton = new Button("Add Folder");
 
     public CollectionsView(RequestTabPane tabPane) {
         this.tabPane = tabPane;
@@ -66,7 +68,7 @@ public class CollectionsView extends BorderPane {
 
     private void setupToolbar() {
         ToolBar toolBar = new ToolBar(addButton, deleteButton, importButton, importCollectionButton);
-        VBox topBox = new VBox(5, toolBar, buildSearchBox());
+        VBox topBox = new VBox(5, toolBar, buildSearchBox(), addFolderButton);
         topBox.setPadding(new Insets(5));
         setTop(topBox);
         // main tree view stays in center
@@ -99,8 +101,11 @@ public class CollectionsView extends BorderPane {
                     setText(null);
                 } else if (item instanceof Collection c) {
                     setText(c.getName());
+                } else if (item instanceof Folder f) {
+                    setText("📂 " + f.getName());
                 } else if (item instanceof SavedRequest r) {
-                    setText(r.getName());
+                    // Show METHOD + name
+                    setText(r.getMethod().toUpperCase() + "  " + r.getName());
                 } else {
                     setText(item.toString());
                 }
@@ -129,6 +134,34 @@ public class CollectionsView extends BorderPane {
         // delete collection
         deleteButtonAction();
         importButtonAction();
+
+        addFolderButtonAction();
+    }
+
+    private void addFolderButtonAction() {
+        addFolderButton.setOnAction(e -> {
+            Object val = getSelectedValue();
+            if (val instanceof Collection col) {
+                TextInputDialog dialog = new TextInputDialog("New Folder");
+                dialog.setHeaderText("Enter folder name:");
+                dialog.showAndWait().ifPresent(name -> {
+                    col.addFolder(new Folder(name));
+                    store.updateCollection(col); // overwrite persisted
+                    refresh();
+                });
+            } else if (val instanceof Folder folder) {
+                TextInputDialog dialog = new TextInputDialog("New SubFolder");
+                dialog.setHeaderText("Enter folder name:");
+                dialog.showAndWait().ifPresent(name -> {
+                    folder.addSubFolder(new Folder(name));
+                    Collection parentCollection = getParentCollection(folder);
+                    if (parentCollection != null) {
+                        store.updateCollection(parentCollection); // ensure persistence
+                    }
+                    refresh();
+                });
+            }
+        });
     }
 
     private void importButtonAction() {
@@ -177,6 +210,7 @@ public class CollectionsView extends BorderPane {
 
     public void refresh() {
         treeView.setRoot(buildTree(null));
+        treeView.setShowRoot(false);
     }
 
     private TreeItem<Object> buildTree(String query) {
@@ -187,21 +221,45 @@ public class CollectionsView extends BorderPane {
         for (Collection col : store.getCollections()) {
             TreeItem<Object> colItem = new TreeItem<>(col);
 
-            boolean collectionMatches = (q == null) || col.getName().toLowerCase().contains(q);
-
+            // Add requests at root level
             for (SavedRequest req : col.getRequests()) {
-                if (q == null ||
-                    req.getName().toLowerCase().contains(q) ||
-                    req.getUrl().toLowerCase().contains(q) ||
-                    collectionMatches) {
+                if (matchesQuery(req, col, q)) {
                     colItem.getChildren().add(new TreeItem<>(req));
                 }
             }
+            // Add folders recursively
+            for (Folder folder : col.getFolders()) {
+                TreeItem<Object> folderItem = buildFolderTree(folder, col, q);
+                colItem.getChildren().add(folderItem);
+            }
 
             root.getChildren().add(colItem);
-            colItem.setExpanded(true);
         }
         return root;
+    }
+
+    private TreeItem<Object> buildFolderTree(Folder folder, Collection col, String q) {
+        TreeItem<Object> folderItem = new TreeItem<>(folder);
+
+        for (SavedRequest req : folder.getRequests()) {
+            if (matchesQuery(req, col, q)) {
+                folderItem.getChildren().add(new TreeItem<>(req));
+            }
+        }
+
+        for (Folder sub : folder.getSubFolders()) {
+            TreeItem<Object> subItem = buildFolderTree(sub, col, q);
+            folderItem.getChildren().add(subItem);
+        }
+
+        return folderItem;
+    }
+
+    private boolean matchesQuery(SavedRequest req, Collection col, String q) {
+        return q == null ||
+            req.getName().toLowerCase().contains(q) ||
+            req.getUrl().toLowerCase().contains(q) ||
+            col.getName().toLowerCase().contains(q);
     }
 
     private void openRequestInNewTab(SavedRequest req) {
@@ -270,10 +328,23 @@ public class CollectionsView extends BorderPane {
             if (parent != null) {
                 store.removeRequestFromCollection(parent.getName(), req);
             }
+        } else if (val instanceof Folder folder) {
+            Collection parentCollection = getParentCollection(folder);
+            if (parentCollection != null) {
+                parentCollection.getFolders().removeIf(f -> f.getName().equals(folder.getName()));
+                store.updateCollection(parentCollection);
+                refresh();
+            }
         }
     }
 
     private Collection getParentCollection(SavedRequest req) {
+        TreeItem<Object> selected = treeView.getSelectionModel().getSelectedItem();
+        TreeItem<Object> parent = selected != null ? selected.getParent() : null;
+        return (parent != null && parent.getValue() instanceof Collection col) ? col : null;
+    }
+
+    private Collection getParentCollection(Folder folder) {
         TreeItem<Object> selected = treeView.getSelectionModel().getSelectedItem();
         TreeItem<Object> parent = selected != null ? selected.getParent() : null;
         return (parent != null && parent.getValue() instanceof Collection col) ? col : null;

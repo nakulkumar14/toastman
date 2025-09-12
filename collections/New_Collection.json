@@ -9,5 +9,6 @@
       "Content-Type" : "application/json"
     },
     "body" : ""
-  } ]
+  } ],
+  "folders" : [ ]
 }

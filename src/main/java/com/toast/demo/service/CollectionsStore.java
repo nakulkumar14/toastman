@@ -128,4 +128,17 @@ public class CollectionsStore {
                 notifyListeners();
             });
     }
+
+    public void updateCollection(Collection updated) {
+        for (int i = 0; i < collections.size(); i++) {
+            if (collections.get(i).getName().equalsIgnoreCase(updated.getName())) {
+                collections.set(i, updated);
+                saveCollection(updated);   // overwrite file
+                notifyListeners();
+                return;
+            }
+        }
+        // fallback: if not found, just add it
+        addCollection(updated);
+    }
 }

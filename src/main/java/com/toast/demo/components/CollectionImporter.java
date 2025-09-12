@@ -36,6 +36,12 @@ public class CollectionImporter {
             String name = item.get("name").getAsString();
 
             JsonObject req = item.getAsJsonObject("request");
+
+            if (req == null) {
+                log.warn("Skipping item without request: {}", name);
+                continue;
+            }
+
             String method = req.get("method").getAsString();
             String url = req.getAsJsonObject("url").get("raw").getAsString();
 

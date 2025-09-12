@@ -5,21 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Collection {
+public class Folder {
 
     private String name;
     private List<SavedRequest> requests = new ArrayList<>();
-    private List<Folder> folders = new ArrayList<>();
+    private List<Folder> subFolders = new ArrayList<>();
 
-    public Collection() {
+    public Folder() {
     }
 
-    public Collection(String collectionName, List<SavedRequest> result) {
-        this.name = collectionName;
-        this.requests = result;
-    } // needed for Jackson
-
-    public Collection(String name) {
+    public Folder(String name) {
         this.name = name;
     }
 
@@ -39,19 +34,19 @@ public class Collection {
         this.requests = requests;
     }
 
-    public void addRequest(SavedRequest request) {
-        requests.add(request);
+    public List<Folder> getSubFolders() {
+        return subFolders;
     }
 
-    public List<Folder> getFolders() {
-        return folders;
+    public void setSubFolders(List<Folder> subFolders) {
+        this.subFolders = subFolders;
     }
 
-    public void setFolders(List<Folder> folders) {
-        this.folders = folders;
+    public void addRequest(SavedRequest req) {
+        requests.add(req);
     }
 
-    public void addFolder(Folder folder) {
-        folders.add(folder);
+    public void addSubFolder(Folder folder) {
+        subFolders.add(folder);
     }
 }

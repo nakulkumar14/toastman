@@ -1,0 +1,163 @@
+{
+  "name" : "acs",
+  "requests" : [ {
+    "id" : "b9ec1567-946b-4493-bb37-1d21216a92f9",
+    "name" : "/acs/ota/validate",
+    "method" : "POST",
+    "url" : "https://my.hwslabs.com/acs/ota/validate",
+    "headers" : { },
+    "body" : ""
+  }, {
+    "id" : "14fd57a9-7379-4ead-9de9-91c8be08bcc6",
+    "name" : "/acs/.well-known/openid-configuration",
+    "method" : "GET",
+    "url" : "https://test-acs.{{baseUrl}}/acs/.well-known/openid-configuration",
+    "headers" : { },
+    "body" : ""
+  }, {
+    "id" : "bde6d479-a205-4fc8-9d45-06b32de4aae2",
+    "name" : "/acs/openid/logout",
+    "method" : "GET",
+    "url" : "https://my.hwslabs.com/acs/openid/logout?post_logout_redirect_uri=JUNK&id_token_hint=JUNK&state=JUNK",
+    "headers" : { },
+    "body" : ""
+  }, {
+    "id" : "7a214a4b-a433-482a-b9c6-10000ac53e41",
+    "name" : "/acs/services",
+    "method" : "GET",
+    "url" : "https://boomi.{{baseUrl}}/acs/services?service_name=catalog",
+    "headers" : {
+      "Content-Type" : "application/vnd.vmware.vidm.accesscontrol.service.metadata.list+json",
+      "token" : "",
+      "Authorization" : "Bearer {{token}}"
+    },
+    "body" : ""
+  }, {
+    "id" : "4e541d3b-ebb6-468c-9e6c-ce9fce3fb23c",
+    "name" : "/acs/rules/me",
+    "method" : "GET",
+    "url" : "https://boomi.{{baseUrl}}/acs/rules/me",
+    "headers" : {
+      "Authorization" : "HZN {{token}}"
+    },
+    "body" : ""
+  }, {
+    "id" : "a6ab949f-e8d2-455e-8742-7da3200b5c0d",
+    "name" : "/acs/oauth2clients/retirePrimarySecret",
+    "method" : "POST",
+    "url" : "https://boomi.vsignon.com/acs/oauth2clients/retirePrimarySecret?id=HW-158951-2",
+    "headers" : {
+      "Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE2NjA3MzQ2NjIsImlhdCI6MTY2MDcyMzg2Miwic3ViIjoiN2RjZmQyOTQtMmJlZC00Yjk1LThjMWQtMmM4MmM4NDUyNTUzIiwiYXV0aF90aW1lIjoxNjYwNzIzODYyLCJzY3AiOiJhZG1pbiIsImF1ZCI6Imh0dHBzOi8vYm9vbWkudnNpZ25vbi5jb20vU0FBUy9hdXRoL29hdXRodG9rZW4iLCJ1c2VyX2lkIjoiMTYzMTQ2MCIsImVtbCI6Ik9BdXRoQ2xpZW50X0hXMTU4OTUxMkBub3JlcGx5LmNvbSIsImF6cCI6IkhXLTE1ODk1MS0yIiwiaXNzIjoiaHR0cHM6Ly9ib29taS52c2lnbm9uLmNvbS9TQUFTL2F1dGgiLCJydWxlcyI6eyJleHBpcnkiOjE2NjA3MjU2NjIsImxpbmsiOiJodHRwczovL2Jvb21pLnZzaWdub24uY29tL2Fjcy9ydWxlcy9tZSIsInJ1bGVzIjpbeyJyZXNvdXJjZXMiOlsiKiJdLCJhY3Rpb25zIjpbIioiXSwiY29uZGl0aW9ucyI6bnVsbCwiYWR2aWNlIjpudWxsfV19LCJwaWQiOiI1MDgyODE1My1kMjYzLTQ3OGQtYjgyOS00YTU3Y2I4ODE1ZjMiLCJwcm5fdHlwZSI6IlNFUlZJQ0UiLCJwcm4iOiJIVy0xNTg5NTEtMkBCT09NSSIsImp0aSI6IjUwODI4MTUzLWQyNjMtNDc4ZC1iODI5LTRhNTdjYjg4MTVmMyIsImNpZCI6IkhXLTE1ODk1MS0yIn0.V1tIYr8hdUQUqlaGzv9WN7-kwQvVJlSZiyAa28UO9dJl692Nkf0xNea2RDNnU64gAoZBoyE8Oq3MGZJGJCsGR-RIa03GlQT5n_sUcP5K1Y3vY9ZFcyn4cMSd77J08Pr__R4N1JSSLiFmBJbNg6STZcqZ9z86Gp6-bBHmAiNP0_w",
+      "Cookie" : "AWSALB=mBMK/usHVESb1ITYqpWRP+IBPUMcyLtjfUTJ7FfbEusRqENns1YFozP13EE4iAUmepKX6NuEQXVEpgeteOLmpuqeYeSwN0x7+sfioPyYcqWwvlwnmKSp88OsS7pv; AWSALBCORS=mBMK/usHVESb1ITYqpWRP+IBPUMcyLtjfUTJ7FfbEusRqENns1YFozP13EE4iAUmepKX6NuEQXVEpgeteOLmpuqeYeSwN0x7+sfioPyYcqWwvlwnmKSp88OsS7pv"
+    },
+    "body" : ""
+  }, {
+    "id" : "6ac44847-76de-47a3-99ea-17887c42ab3f",
+    "name" : "/acs/oauth2clients/retirePrimarySecret",
+    "method" : "POST",
+    "url" : "https://boomi.vsignon.com/acs/oauth2clients/retirePrimarySecret?id=HW-158951-2",
+    "headers" : {
+      "Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE2NjA3MzQ2NjIsImlhdCI6MTY2MDcyMzg2Miwic3ViIjoiN2RjZmQyOTQtMmJlZC00Yjk1LThjMWQtMmM4MmM4NDUyNTUzIiwiYXV0aF90aW1lIjoxNjYwNzIzODYyLCJzY3AiOiJhZG1pbiIsImF1ZCI6Imh0dHBzOi8vYm9vbWkudnNpZ25vbi5jb20vU0FBUy9hdXRoL29hdXRodG9rZW4iLCJ1c2VyX2lkIjoiMTYzMTQ2MCIsImVtbCI6Ik9BdXRoQ2xpZW50X0hXMTU4OTUxMkBub3JlcGx5LmNvbSIsImF6cCI6IkhXLTE1ODk1MS0yIiwiaXNzIjoiaHR0cHM6Ly9ib29taS52c2lnbm9uLmNvbS9TQUFTL2F1dGgiLCJydWxlcyI6eyJleHBpcnkiOjE2NjA3MjU2NjIsImxpbmsiOiJodHRwczovL2Jvb21pLnZzaWdub24uY29tL2Fjcy9ydWxlcy9tZSIsInJ1bGVzIjpbeyJyZXNvdXJjZXMiOlsiKiJdLCJhY3Rpb25zIjpbIioiXSwiY29uZGl0aW9ucyI6bnVsbCwiYWR2aWNlIjpudWxsfV19LCJwaWQiOiI1MDgyODE1My1kMjYzLTQ3OGQtYjgyOS00YTU3Y2I4ODE1ZjMiLCJwcm5fdHlwZSI6IlNFUlZJQ0UiLCJwcm4iOiJIVy0xNTg5NTEtMkBCT09NSSIsImp0aSI6IjUwODI4MTUzLWQyNjMtNDc4ZC1iODI5LTRhNTdjYjg4MTVmMyIsImNpZCI6IkhXLTE1ODk1MS0yIn0.V1tIYr8hdUQUqlaGzv9WN7-kwQvVJlSZiyAa28UO9dJl692Nkf0xNea2RDNnU64gAoZBoyE8Oq3MGZJGJCsGR-RIa03GlQT5n_sUcP5K1Y3vY9ZFcyn4cMSd77J08Pr__R4N1JSSLiFmBJbNg6STZcqZ9z86Gp6-bBHmAiNP0_w"
+    },
+    "body" : ""
+  }, {
+    "id" : "4788c7e9-4162-47da-b63e-941623f4f465",
+    "name" : "/acs/effectiverulesets",
+    "method" : "GET",
+    "url" : "https://{{baseUrl}}/acs/effectiverulesets?subject_type=client&subject_id=57c5de32-3abb-381b-9f7a-318ce0a1f295",
+    "headers" : {
+      "Authorization" : "{{HZN}}",
+      "Content-Type" : "application/vnd.vmware.vidm.accesscontrol.effective.ruleset.list+json"
+    },
+    "body" : ""
+  }, {
+    "id" : "10a16a74-cb3a-4265-97a8-ab348827b571",
+    "name" : "/acs/openid/logout",
+    "method" : "GET",
+    "url" : "https://cns.hwslabs.com/acs/openid/logout?post_logout_redirect_uri=https://example-app.com/redirect?auth=oauth&id_token_hint=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjE2NDkwOTAxMTIifQ.eyJlbWFpbCI6Im1tYWRhckB2bXdhcmUuY29tIiwiZXhwIjoxNjU3NzkzMTg1LCJpYXQiOjE2NTc3ODIzODUsInN1YiI6ImFkbWluQENOUyIsImlzcyI6Imh0dHBzOi8vY25zLmh3c2xhYnMuY29tL1NBQVMvYXV0aCIsImF1ZCI6WyJ0ZXN0LXJlZGlyZWN0LWNsaWVudCJdLCJhdXRoX3RpbWUiOjE2NTc3ODIzMDEsImF6cCI6InRlc3QtcmVkaXJlY3QtY2xpZW50IiwiYXRfaGFzaCI6IkRBUnlJUWt6SEtpaWFBS053Y0xtQVEiLCJjX2hhc2giOiJ6cFM2a1JHX1VKclNieVBfODloY2ZBIiwibmFtZSI6IlRlbmFudCBBZG1pbiIsImdpdmVuX25hbWUiOiJUZW5hbnQiLCJmYW1pbHlfbmFtZSI6IkFkbWluIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInVwZGF0ZWRfYXQiOjE2NDkwOTAyOTk4NjQsImdyb3VwX25hbWVzIjpbIkFMTCBVU0VSUyJdLCJncm91cF9pZHMiOlsiODNmNWRlMmEtNDMxNC00YmViLTliNDMtOWEzNTg5OTMzMDMzIl0sImFjY3QiOiJhZG1pbkBTeXN0ZW0gRG9tYWluIn0.xOWEw3uNZkQYv9FG3dfD09xZRidB4UBtA5_ROiBzx8_HGAyLCte9T6pQVmAwGoYhQKohqjQ97HbSzlQpQVbNBY27U_0R8nlJMMN4cxcWQbm4u_jpgsQP97GY021CCTPJAmsZLR5fMuoIOU304gvvUSbrsOIYbExD8POGxqL7FdGMQpqb--yYPFIcENVwozhaznNJwa3-FkA2CVN6W5sR4mI5m2aOF4yh0Pd2OOtqP4nHhdWTSYTeEH51KQb7_akS6b1I1G16mQyd5vUJzVrtEzlwBIkjbJO23l5CEwKopWXbIV1jSIxJ5ssET3AFu-KzFXhjn9iiUpMa9RahRtTj-A",
+    "headers" : {
+      "Accept" : "*/*",
+      "Cookie" : "AWSALB=ofbAdGtsEyKNCSJZm49si45s/v/vyxsc+0dq+OvFYBnWfxguauYOHEnBW/Bc+tqvwVjnNdT7o+NdN2D+mkEvAl1JHRyY0uYW/5c96MYStC11cvqBoyKY1pVo9C+P; AWSALBCORS=ofbAdGtsEyKNCSJZm49si45s/v/vyxsc+0dq+OvFYBnWfxguauYOHEnBW/Bc+tqvwVjnNdT7o+NdN2D+mkEvAl1JHRyY0uYW/5c96MYStC11cvqBoyKY1pVo9C+P"
+    },
+    "body" : ""
+  }, {
+    "id" : "2a83d560-f360-41c3-ac63-e714cb784d8f",
+    "name" : "admin token",
+    "method" : "POST",
+    "url" : "https://boomi.vsignon.com/federation/api/login",
+    "headers" : {
+      "accept" : "application/json",
+      "Content-Type" : "application/json"
+    },
+    "body" : "{\n  \"username\": \"admin\",\n  \"password\": \"adminpassword\",\n  \"domain\": \"system domain\",\n  \"issueToken\": true\n}"
+  }, {
+    "id" : "e9d43f18-5e48-4c33-90fd-65095a0ec97f",
+    "name" : "/acs/rules/client/",
+    "method" : "GET",
+    "url" : "https://boomi.vsignon.com/acs/rules/resource/602a1ada-5875-4c24-b855-d2ad10f1a948",
+    "headers" : {
+      "Authorization" : "HZN eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJmYWQ4ODUyYy1lNmYyLTQ1M2UtOTlkNi0xNjIwN2FjYmQ1ZGEiLCJzY3AiOiJ1c2VyIHByb2ZpbGUgZW1haWwgYWRtaW4iLCJlbWwiOiJjZGl2aUB2bXdhcmUuY29tIiwiY3R4IjoiW3tcIm10ZFwiOlwidXJuOnZtd2FyZTpuYW1lczphYzpjbGFzc2VzOkxvY2FsUGFzc3dvcmRBdXRoXCIsXCJpYXRcIjoxNzQ0MzY3MzkwLFwidHlwXCI6XCIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMTRcIixcImlkbVwiOnRydWV9XSIsImlzcyI6Imh0dHBzOi8vYm9vbWkudnNpZ25vbi5jb20vU0FBUy9hdXRoIiwicGlkIjoiOWYxODg1MTEtNDYyMy00MDEyLTg0NDctMTI1ZDU0ZWNiNTY1IiwiZnAiOiIxLmEudS5tLmU0NzQ3YTI0ODIzZThlNzg4OTA5Nzk1MmE0NThiM2QyZjUwNTNhYTUzMGI4YzhhZjZkNzI5MjZlM2QxODJhMDYiLCJydWxlcyI6eyJleHBpcnkiOjE3NDQzNjkxOTEsInJ1bGVzIjpbeyJkaXNhYmxlZCI6ZmFsc2UsInJlc291cmNlcyI6WyIqIl0sImFjdGlvbnMiOlsiYWNzOnJlYWRSdWxlU2V0cyIsImRtOnJlYWQiLCJ1ZzpyZWFkIiwiZW50OnJlYWQiLCJjdGc6cmVhZCIsInRudHM6cmVhZCIsInJwdDoqIl19LHsiZGlzYWJsZWQiOmZhbHNlLCJyZXNvdXJjZXMiOlsiKiJdLCJhY3Rpb25zIjpbIioiXX1dLCJsaW5rIjoiaHR0cHM6Ly9ib29taS52c2lnbm9uLmNvbS9hY3MvcnVsZXMvbWUifSwicHJuIjoiYWRtaW5AQk9PTUkiLCJhdWQiOiJodHRwczovL2Jvb21pLnZzaWdub24uY29tL1NBQVMvYXV0aC9vYXV0aHRva2VuIiwid2lkIjoiIiwiaWRwIjoiIiwidXNlcl9pZCI6IjEzNDM4MDkiLCJhdXRoX3RpbWUiOjE3NDQzNjczOTAsImRvbWFpbiI6IlN5c3RlbSBEb21haW4iLCJleHAiOjE3NDQzNzA5OTAsInBybl90eXBlIjoiVVNFUiIsImlhdCI6MTc0NDM2NzM5MSwiZGlkIjoiIiwianRpIjoiOWYxODg1MTEtNDYyMy00MDEyLTg0NDctMTI1ZDU0ZWNiNTY1IiwiY2lkIjoiIn0.ibtlvLc2_ZwNJVmDOgjyPVtTsLn2n10MlrlUVLSDGaUUzMA7FiuWQ7-7oc2VTNdc2ZYbNUj-6g8s3S8sQIZT-CqXCy9ZBaoSnq_aXx2C0ZjDa0Je9XQjhfH2EOFKI0U_NJOdtonWtBDGdepdof3Mlz84DPLG38KxJsUc7-FY2oU",
+      "Content-Type" : "application/vnd.vmware.vidm.accesscontrol.effective.ruleset.list+json",
+      "x-vidm-eecache-enabled" : "true",
+      "x-vidm-eecache-key" : "RULES--BOOMI--user--575cf221-60f3-4e78-ac80-b1495c2f7d44--false"
+    },
+    "body" : ""
+  }, {
+    "id" : "09800229-ff14-4fcd-96c2-825491592086",
+    "name" : "authorize",
+    "method" : "GET",
+    "url" : "",
+    "headers" : {
+      "token" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE2NzUxNDM5MzcsImlhdCI6MTY3NDUzOTEzNywic3ViIjoiOWUxMzQyMzUtZjgzNC00ZmUwLWEwNTYtYmJlMWQ3NTZiMjgzIiwiYXV0aF90aW1lIjoxNjc0NTM5MTM3LCJzY3AiOiJjcm9zcy10ZW5hbnQiLCJhdWQiOiJodHRwczovL2h3cy52c2lnbm9uLmNvbS9TQUFTL2F1dGgvb2F1dGh0b2tlbiIsInVzZXJfaWQiOiIxOTkyNTA2IiwiZW1sIjoiT0F1dGhDbGllbnRfc2NpbV90ZXN0X2NsaWVudDVAbm9yZXBseS5jb20iLCJhenAiOiJzY2ltX3Rlc3RfY2xpZW50NSIsImlzcyI6Imh0dHBzOi8vaHdzLnZzaWdub24uY29tL1NBQVMvYXV0aCIsInJ1bGVzIjp7ImV4cGlyeSI6MTY3NDU0MDkzNywibGluayI6Imh0dHBzOi8vaHdzLnZzaWdub24uY29tL2Fjcy9ydWxlcy9tZSIsInJ1bGVzIjpbeyJyZXNvdXJjZXMiOlsidnJuOnVnOioiXSwiYWN0aW9ucyI6WyJ1ZzpyZWFkIl0sImNvbmRpdGlvbnMiOnt9LCJhZHZpY2UiOm51bGx9LHsicmVzb3VyY2VzIjpbInZybjp0bnRzOioiXSwiYWN0aW9ucyI6WyJ0bnRzOnJlYWQiXSwiY29uZGl0aW9ucyI6e30sImFkdmljZSI6bnVsbH1dfSwicGlkIjoiOTg4OWZlZjUtNzhiMi00YzY3LTg3ODUtM2ZjNzljNGFjMzE1IiwicHJuX3R5cGUiOiJTRVJWSUNFIiwicHJuIjoic2NpbV90ZXN0X2NsaWVudDVASFdTIiwianRpIjoiOTg4OWZlZjUtNzhiMi00YzY3LTg3ODUtM2ZjNzljNGFjMzE1IiwiY2lkIjoic2NpbV90ZXN0X2NsaWVudDUifQ.IdMzjhipcNFXxHngm5sc49NsG28bCaHvcCtncuLCL-yVNltCYrfwIEpYupvf-wY7Zw1Jr7D76rruLY7jF7GRojBYUIQRQ-brx9fox5fV3GcTi-HOMC47p5FUjy8VOEsFP-N2M9PCNDjypjDYYAKstJt0TEfzoEqAFtbF3ABiz9A"
+    },
+    "body" : ""
+  }, {
+    "id" : "42745e78-29ef-4d69-90d2-ba94a6946914",
+    "name" : "/acs/userinfo",
+    "method" : "GET",
+    "url" : "https://boomi.vsignon.com/acs/userinfo",
+    "headers" : {
+      "Authorization" : "HZN eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE2OTM0OTE4OTgsImlhdCI6MTY5MzQ4MTA5OCwic3ViIjoiMjMzZGMwYjItZTAyNi00OTFkLWI5MmQtODAyMjYwM2FmYzZmIiwiYXV0aF90aW1lIjoxNjkzNDgxMDk4LCJzY3AiOiJvcGVuaWQgYWRtaW4gdXNlciBlbWFpbCBwcm9maWxlIGdyb3VwIiwiYXVkIjoiaHR0cHM6Ly9ib29taS52c2lnbm9uLmNvbS9TQUFTL2F1dGgvb2F1dGh0b2tlbiIsInVzZXJfaWQiOiIyMDMzODAyIiwiZW1sIjoiT0F1dGhDbGllbnRfb3BlbmlkMkBub3JlcGx5LmNvbSIsImF6cCI6Im9wZW5pZC0yIiwiaXNzIjoiaHR0cHM6Ly9ib29taS52c2lnbm9uLmNvbS9TQUFTL2F1dGgiLCJydWxlcyI6eyJleHBpcnkiOjE2OTM0ODI4OTgsImxpbmsiOiJodHRwczovL2Jvb21pLnZzaWdub24uY29tL2Fjcy9ydWxlcy9tZSIsInJ1bGVzIjpbeyJyZXNvdXJjZXMiOlsiKiJdLCJhY3Rpb25zIjpbIioiXSwiY29uZGl0aW9ucyI6bnVsbCwiYWR2aWNlIjpudWxsfV19LCJwaWQiOiJmOTU1ZDNhOS0wZGRiLTQwNTctOTVkMi1jYjhiYzBhNDg2ZTYiLCJwcm5fdHlwZSI6IlNFUlZJQ0UiLCJwcm4iOiJvcGVuaWQtMkBCT09NSSIsImp0aSI6ImY5NTVkM2E5LTBkZGItNDA1Ny05NWQyLWNiOGJjMGE0ODZlNiIsImNpZCI6Im9wZW5pZC0yIn0.bN0oQgUJKExOaWbqt4WBReb74LCAGwYW51lf_85gBXW59ksN9VPqzhqnyt5ODws0juCAKXogBznv2gMkWvTjbaPNMqA6c5HJaKsXYeXc7yxVUwMOlUBgKM3oBkHG5Y9Tbrd7EKlhcqUlswsJ86pWqfFivIb1KXSiNGPMHqqJf4E"
+    },
+    "body" : ""
+  }, {
+    "id" : "4b9c296d-c88d-4b40-90ef-ec11329265ef",
+    "name" : "/acs/activate",
+    "method" : "POST",
+    "url" : "localhost:8080/acs/activate",
+    "headers" : {
+      "Content-Type" : "text/plain",
+      "x-tenant-id" : "ANOTHERTENANT"
+    },
+    "body" : "eyJvdGEiOiIxMjczYjA2OS02ZjA2LTQ0NTUtYWU2Yy1mYzI1ZDM0YWU5ZTQ6cmh3N3Foa29yVTdNdmRqc1hTeTIyNTQyQkFpSWQ1VFMiLCJ1cmwiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvIiwidGlkIjoiQU5PVEhFUlRFTkFOVCJ9"
+  }, {
+    "id" : "f7244766-bf13-41d0-8add-30ae9a6c0734",
+    "name" : "https://test-acs.hwslabs.com/SAAS/API/1.0/REST/auth/token?attribute=publicKey&format=jwks",
+    "method" : "GET",
+    "url" : "https://test-acs.hwslabs.com/SAAS/API/1.0/REST/auth/token?attribute=publicKey&format=jwks",
+    "headers" : { },
+    "body" : ""
+  }, {
+    "id" : "46a47073-c349-4097-acd7-cedd00dde435",
+    "name" : "https://sva-mitmaster.vidmlabs.com/SAAS/jersey/manager/api/oauth2apptemplates/VMware-HorizonAgent-Atest1",
+    "method" : "PUT",
+    "url" : "https://sva-mitmaster.vidmlabs.com/SAAS/jersey/manager/api/oauth2apptemplates/VMware-HorizonAgent-Atest1",
+    "headers" : {
+      "Authorization" : "HZN <token>",
+      "Content-Type" : "application/vnd.vmware.horizon.manager.oauth2apptemplate+json",
+      "Cookie" : "JSESSIONID=7F4A46A34A449B7DE2E1A4CCF69C68BC; XSRF-TOKEN=f94a55c1e01a826; JSESSIONID=F60B8F3D6BB055850B964E2E35427441; XSRF-TOKEN=a4ff6a5fb28fdee"
+    },
+    "body" : "{\r\n    \"appProductId\": \"VMware-HorizonAgent-test60\",\r\n    \"scope\": \"user profile email admin\",\r\n    \"authGrantTypes\": \"authorization_code refresh_token\",\r\n    \"authorities\": null,\r\n    \"redirectUri\": \"horizonapi://oauth2\",\r\n    \"tokenType\": \"Bearer\",\r\n    \"length\": 32,\r\n    \"accessTokenTTL\": 480,\r\n    \"refreshTokenTTL\": 129600,\r\n    \"refreshTokenIdleTTL\": null,\r\n    \"displayUserGrant\": false\r\n}"
+  }, {
+    "id" : "756c42b7-4de6-490e-b0a4-7e901f6fd374",
+    "name" : "https://cns.hwslabs.com/SAAS/jersey/manager/api/oauth2apptemplates/test-1",
+    "method" : "PUT",
+    "url" : "https://cns.hwslabs.com/SAAS/jersey/manager/api/oauth2apptemplates/test-1",
+    "headers" : {
+      "authorization" : "HZN eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJjMjU1NTgzNy0zN2VhLTRjMmItYmFkYi05YTUyNzZhOWJiNDMiLCJzY3AiOiJ1c2VyIHByb2ZpbGUgZW1haWwgYWRtaW4iLCJlbWwiOiJtbWFkYXJAdm13YXJlLmNvbSIsImN0eCI6Ilt7XCJtdGRcIjpcInVybjp2bXdhcmU6bmFtZXM6YWM6Y2xhc3NlczpMb2NhbFBhc3N3b3JkQXV0aFwiLFwiaWF0XCI6MTc0OTYxNjM5MSxcInR5cFwiOlwiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDE0XCIsXCJpZG1cIjp0cnVlfV0iLCJpc3MiOiJodHRwczovL2Nucy5od3NsYWJzLmNvbS9TQUFTL2F1dGgiLCJwaWQiOiIyMWU3N2I0YS01MWY4LTRhMTItOWNhYy0zNGJiNWVkY2I0OGQiLCJydWxlcyI6eyJleHBpcnkiOjE3NDk2MTgxOTIsInJ1bGVzIjpbeyJkaXNhYmxlZCI6ZmFsc2UsInJlc291cmNlcyI6WyIqIl0sImFjdGlvbnMiOlsiYWNzOnJlYWRSdWxlU2V0cyIsImRtOnJlYWQiLCJ1ZzpyZWFkIiwiZW50OnJlYWQiLCJjdGc6cmVhZCIsInRudHM6cmVhZCIsInJwdDoqIl19LHsiZGlzYWJsZWQiOmZhbHNlLCJyZXNvdXJjZXMiOlsiKiJdLCJhY3Rpb25zIjpbIioiXX1dLCJsaW5rIjoiaHR0cHM6Ly9jbnMuaHdzbGFicy5jb20vYWNzL3J1bGVzL21lIn0sInBybiI6ImFkbWluQENOUyIsImF1ZCI6Imh0dHBzOi8vY25zLmh3c2xhYnMuY29tL1NBQVMvYXV0aC9vYXV0aHRva2VuIiwid2lkIjoiIiwiaWRwIjoiIiwidXNlcl9pZCI6IjExMDM0Njg3IiwiYXV0aF90aW1lIjoxNzQ5NjE2MzkxLCJkb21haW4iOiJTeXN0ZW0gRG9tYWluIiwiZXhwIjoxNzQ5NjQ1MTkxLCJwcm5fdHlwZSI6IlVTRVIiLCJpYXQiOjE3NDk2MTYzOTIsImRpZCI6IiIsImp0aSI6IjIxZTc3YjRhLTUxZjgtNGExMi05Y2FjLTM0YmI1ZWRjYjQ4ZCIsImNpZCI6IiJ9.NPKq0Ar_Ms_3ouR3fnRtGOL7Nf9RYU8gv3CYSPIPEx70uXN7vtR6KPIIbjZdFrdgTlqM1S5LQa0D_o36zUdGp7mL_Jof1rKEvUM9mGilCYT8TZPUd0BWBm3U6LK5wyLn35VlrfLlK4Y6rBRigxNqn9D0F1D3K0dCPpCYa34FA9mLp4keLBKi7rkb057TlNkEZzU8Cmk7R9dT31f3HHYBwB7svoPf7KoVU3ZjP30KE-CuwOFY5cIS3S5BGA4QG548W3LQf1TDfyhJcqI9iEdVbarSuJxcOdhoSIk1YAEAFpDPoaK_r_78de78fNRvTVfkLqvnKqAepnUbUPwGekDMaw",
+      "content-type" : "application/json"
+    },
+    "body" : "{\n  \"scope\": \"email profile user openid\",\n  \"authGrantTypes\": \"authorization_code refresh_token\",\n  \"redirectUri\": \"https://google.com\",\n  \"accessTokenTTL\": 180,\n  \"refreshTokenTTL\": 129600,\n  \"refreshTokenIdleTTL\": 14400,\n  \"builtInTemplate\": false,\n  \"enableAccessTokenFingerprint\": true,\n  \"_links\": {\n    \"self\": {\n      \"href\": \"oauth2templates/test-1\"\n    }\n  },\n  \"id\": \"75b12253-7f41-31c2-92c9-818c9a8b8ba6\",\n  \"appProductId\": \"test-1\",\n  \"displayUserGrant\": true,\n  \"returnFailureResponseOnAccessDenied\": false\n}"
+  } ],
+  "folders" : [ ]
+}
