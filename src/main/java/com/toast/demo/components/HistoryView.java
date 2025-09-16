@@ -6,7 +6,6 @@ import com.toast.demo.service.RequestHistory;
 import javafx.geometry.Insets;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 
 public class HistoryView extends BorderPane {

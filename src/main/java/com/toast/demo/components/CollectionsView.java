@@ -11,9 +11,13 @@ import java.io.IOException;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
@@ -24,6 +28,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
@@ -94,20 +99,86 @@ public class CollectionsView extends BorderPane {
     private void setupTreeView() {
         treeView.setShowRoot(false);
         treeView.setCellFactory(tv -> new TreeCell<>() {
+
+            private final Button menuButton = new Button("⋮");
+            private final HBox cellBox = new HBox(5);
+            private final Label nameLabel = new Label();
+
+            {
+                menuButton.setVisible(false);
+                menuButton.setFocusTraversable(false);
+                menuButton.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
+
+                // Context menu actions
+                MenuItem exportItem = new MenuItem("Export");
+                exportItem.setOnAction(e -> {
+                    Object val = getItem();
+                    if (val instanceof Collection col) {
+                        exportCollection(col);
+                    }
+                });
+
+                MenuItem renameItem = new MenuItem("Rename");
+                renameItem.setOnAction(e -> {
+                    Object val = getItem();
+                    if (val instanceof Collection col) {
+                        renameCollection(col);
+                    }
+                });
+
+                MenuItem deleteItem = new MenuItem("Delete");
+                deleteItem.setOnAction(e -> {
+                    Object val = getItem();
+                    if (val instanceof Collection col) {
+                        store.removeCollectionByName(col.getName());
+                    }
+                });
+
+                ContextMenu contextMenu = new ContextMenu(exportItem, renameItem, deleteItem);
+                menuButton.setOnAction(e -> contextMenu.show(menuButton, Side.RIGHT, 0, 0));
+
+                // Layout
+                HBox.setHgrow(nameLabel, Priority.ALWAYS);
+                cellBox.setAlignment(Pos.CENTER_LEFT);
+                cellBox.getChildren().addAll(nameLabel, menuButton);
+            }
+
             @Override
             protected void updateItem(Object item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
+                    setGraphic(null);
+                    setStyle(""); // reset style
+                    return;
                 } else if (item instanceof Collection c) {
-                    setText(c.getName());
+                    setText(null);
+                    nameLabel.setText(c.getName());
+                    setGraphic(cellBox);
+
+                    // Show 3-dots only on hover
+                    setOnMouseEntered(e -> menuButton.setVisible(true));
+                    setOnMouseExited(e -> menuButton.setVisible(false));
                 } else if (item instanceof Folder f) {
+                    setGraphic(null);
                     setText("📂 " + f.getName());
+                    setStyle("");
                 } else if (item instanceof SavedRequest r) {
-                    // Show METHOD + name
-                    setText(r.getMethod().toUpperCase() + "  " + r.getName());
+                    setGraphic(null);
+                    String method = r.getMethod().toUpperCase();
+                    setText(method + "  " + r.getName());
+                    // Apply colors by method
+                    switch (method) {
+                        case "GET" -> setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+                        case "POST" -> setStyle("-fx-text-fill: blue; -fx-font-weight: bold;");
+                        case "PUT" -> setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
+                        case "DELETE" -> setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+                        default -> setStyle("-fx-text-fill: gray; -fx-font-weight: bold;");
+                    }
                 } else {
+                    setGraphic(null);
                     setText(item.toString());
+                    setStyle("");
                 }
             }
         });
@@ -124,6 +195,38 @@ public class CollectionsView extends BorderPane {
         treeView.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.DELETE) {
                 deleteSelected();
+            }
+        });
+    }
+
+    private void exportCollection(Collection col) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export Collection");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+        fileChooser.setInitialFileName(col.getName().replaceAll("\\s+", "_") + ".json");
+
+        File file = fileChooser.showSaveDialog(getScene().getWindow());
+        if (file != null) {
+            try {
+                CollectionsStore.getInstance().exportCollection(col, file);
+                showAlert(Alert.AlertType.INFORMATION, "Export Successful",
+                    "Collection exported to " + file.getAbsolutePath());
+            } catch (IOException e) {
+                log.error("Export failed", e);
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to export collection: " + e.getMessage());
+            }
+        }
+    }
+
+    private void renameCollection(Collection col) {
+        TextInputDialog dialog = new TextInputDialog(col.getName());
+        dialog.setHeaderText("Rename collection:");
+        dialog.setTitle("Rename Collection");
+        dialog.showAndWait().ifPresent(newName -> {
+            if (!newName.isBlank()) {
+                col.setName(newName);
+                store.updateCollection(col);
+                refresh();
             }
         });
     }

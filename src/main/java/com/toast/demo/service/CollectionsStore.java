@@ -141,4 +141,8 @@ public class CollectionsStore {
         // fallback: if not found, just add it
         addCollection(updated);
     }
+
+    public void exportCollection(Collection collection, File file) throws IOException {
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, collection);
+    }
 }
