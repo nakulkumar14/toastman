@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Map;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -20,6 +21,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.slf4j.Logger;
@@ -35,6 +37,8 @@ public class ResponseSection extends VBox {
     private final StyleClassedTextArea responseArea = new StyleClassedTextArea();
     private final Label statusCodeLabel = new Label();
     private final Button copyButton = new Button("Copy");
+    private final Label responseSizeLabel = new Label("⬇"); // download arrow icon
+    private final Label requestSizeLabel = new Label("⬆"); // upload arrow icon
 
     private final VBox headersBox = new VBox(5);
     private final TabPane responseTabs = new TabPane();
@@ -79,9 +83,14 @@ public class ResponseSection extends VBox {
         saveResponseButton.setTooltip(new Tooltip("Save response to file"));
         // Top bar
         HBox responseTopBar = new HBox(10, new Label("Response:"), copyButton, saveResponseButton);
-        statusCodeLabel.setStyle("-fx-font-weight: bold;");
 
-        getChildren().addAll(responseTopBar, responseTabs, statusCodeLabel);
+        statusCodeLabel.setStyle("-fx-font-weight: bold;");
+        requestSizeLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        responseSizeLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        HBox statusBox = new HBox(10, statusCodeLabel, requestSizeLabel, responseSizeLabel);
+        statusBox.setAlignment(Pos.CENTER_LEFT);
+
+        getChildren().addAll(responseTopBar, responseTabs, statusBox);
     }
 
     public void setResponseBody(String body, String contentType) {
@@ -115,6 +124,27 @@ public class ResponseSection extends VBox {
         String color = StatusUtils.getColorForStatusCode(statusCode);
         statusCodeLabel.setText("Status: " + statusCode);
         statusCodeLabel.setStyle("-fx-text-fill: " + color + "; -fx-font-weight: bold;");
+    }
+
+    public void setSizes(String requestBody, Map<String, String> requestHeaders, String responseBody,
+        Map<String, String> responseHeaders) {
+
+        long reqHeadersSize = computeHeaderSize(requestHeaders);
+        long reqBodySize = requestBody != null ? requestBody.getBytes().length : 0;
+        long reqSize = reqHeadersSize + reqBodySize;
+
+        long respHeadersSize = computeHeaderSize(responseHeaders);
+        long resBodySize = responseBody != null ? responseBody.getBytes().length : 0;
+        long resSize = respHeadersSize + resBodySize;
+
+        requestSizeLabel.setTooltip(new Tooltip(
+            "Request size: " + formatSize(reqSize) + "\n" +
+                " (Headers: " + formatSize(reqHeadersSize) + ", Body: " + formatSize(reqBodySize) + ")"
+        ));
+        responseSizeLabel.setTooltip(new Tooltip(
+            "Response size: " + formatSize(resSize)
+                + "\n (Headers: " + formatSize(respHeadersSize) + ", Body: " + formatSize(resBodySize) + ")"
+        ));
     }
 
     private void setupCopyAction() {
@@ -181,5 +211,29 @@ public class ResponseSection extends VBox {
                 copyButton.setDisable(false);
             });
         }).start();
+    }
+
+    private static String formatSize(long bytes) {
+        if (bytes < 1024) {
+            return bytes + " B";
+        }
+        int kb = (int) (bytes / 1024);
+        if (kb < 1024) {
+            return kb + " KB";
+        }
+        double mb = bytes / 1024.0 / 1024.0;
+        return String.format("%.2f MB", mb);
+    }
+
+    private static long computeHeaderSize(Map<String, String> headers) {
+        long size = 0;
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            // key + ": " + value + CRLF
+            size += entry.getKey().getBytes().length
+                + 2
+                + entry.getValue().getBytes().length
+                + 2;
+        }
+        return size;
     }
 }

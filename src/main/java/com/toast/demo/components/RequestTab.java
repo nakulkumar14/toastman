@@ -109,6 +109,8 @@ public class RequestTab extends Tab {
                 responseSection.setResponseBody(response.getBody(), response.getContentType());
                 responseSection.setStatusCode(response.getStatusCode());
                 responseSection.setResponseHeaders(response.getHeaders());
+                responseSection.setSizes(finalBody, headers, response.getBody(), response.getHeaders());
+
 
                 if (curlPane.isVisible()) {
                     String updatedCurl = CurlGenerator.generateCurl(method, url, headers, finalBody);

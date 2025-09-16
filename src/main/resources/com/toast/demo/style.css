@@ -1,13 +1,23 @@
+
+.json-key {
+  -fx-fill: #c792ea; /* purple */
+  -fx-font-weight: bold;
+}
+
 .json-string {
-  -fx-fill: #dc8262;
+  -fx-fill: #538138; /* green */
 }
 
 .json-number {
-  -fx-fill: #ff9900;
+  -fx-fill: #6897bb; /* blue */
 }
 
 .json-boolean {
-  -fx-fill: #cc33cc;
+  -fx-fill: #cc7832; /* orange */
+}
+
+.json-null {
+  -fx-fill: #808080; /* gray */
 }
 
 .html-tag {
@@ -42,8 +52,7 @@
 }
 
 .collections-title {
-  -fx-font-size: 12
-  px;
+  -fx-font-size: 12px;
   -fx-font-weight: bold;
   -fx-text-fill: white;
 }
@@ -96,4 +105,10 @@
 /* Highlighted text */
 .styled-text-area .selection {
   -fx-fill: #6298cf;
+}
+
+.size-label {
+  -fx-font-size: 14px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #444; /* optional */
 }
